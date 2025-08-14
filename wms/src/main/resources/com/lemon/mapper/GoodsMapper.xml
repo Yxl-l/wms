@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.mapper.GoodsMapper">
+
+    <insert id="addSku">
+        insert into sku (
+            id,
+            price,
+            real_price,
+            spu_id,
+            code,
+            title,
+            unit,
+            product_weight,
+            product_length,
+            product_width,
+            product_height,
+            product_volume,
+            spec,
+            saas_id,
+            create_time,
+            create_by,
+            update_time,
+            update_by,
+            is_del
+        ) VALUES (
+                     #{id},
+                     #{price},
+                     #{realPrice},
+                     #{spuId},
+                     #{code},
+                     #{title},
+                     #{unit},
+                     #{productWeight},
+                     #{productLength},
+                     #{productWidth},
+                     #{productHeight},
+                     #{productVolume},
+                     #{spec},
+                     #{saasId},
+                     #{createTime},
+                     #{createBy},
+                     #{updateTime},
+                     #{updateBy},
+                     #{isDel}
+                 )
+    </insert>
+    <select id="getGoodsAll" resultType="com.lemon.domain.vo.GoodsVo">
+        SELECT
+        s.saas_id,
+        s.title,
+        <!-- 分类名称处理：优先显示匹配查询条件的分类，否则显示一级分类 -->
+        COALESCE(
+        CASE WHEN #{categoryId} IS NOT NULL AND #{categoryId} = s.category_id1
+        THEN (SELECT name FROM category WHERE id = s.category_id1 LIMIT 1) END,
+        CASE WHEN #{categoryId} IS NOT NULL AND #{categoryId} = s.category_id2
+        THEN (SELECT name FROM category WHERE id = s.category_id2 LIMIT 1) END,
+        CASE WHEN #{categoryId} IS NOT NULL AND #{categoryId} = s.category_id3
+        THEN (SELECT name FROM category WHERE id = s.category_id3 LIMIT 1) END,
+        (SELECT name FROM category WHERE id = s.category_id1 LIMIT 1),
+        (SELECT name FROM category WHERE id = s.category_id2 LIMIT 1),
+        (SELECT name FROM category WHERE id = s.category_id3 LIMIT 1),
+        '无分类'
+        ) AS category,
+        s.description,
+        sup.supplier_name AS supplier,
+        <!-- 品牌字段预留 -->
+        NULL AS brand,
+        sk.code,
+        sk.product_weight AS productWeight,
+        sk.product_length AS productLength,
+        sk.product_width AS productWidth,
+        sk.product_height AS productHeight,
+        sk.product_volume AS productVolume,
+        sk.real_price AS realPrice,
+        sk.price,
+        sk.spec
+        FROM
+        spu s
+        JOIN
+        sku sk ON s.id = sk.spu_id
+        LEFT JOIN
+        supplier sup ON s.supplier_id = sup.id AND sup.is_del = 1
+        WHERE
+        s.is_del = 1
+        AND sk.is_del = 1
+        <if test="title != null and title != ''">
+            AND s.title LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="code != null and code != ''">
+            AND sk.code = #{code}
+        </if>
+        <if test="categoryId != null">
+            AND (
+            s.category_id1 = #{categoryId}
+            OR s.category_id2 = #{categoryId}
+            OR s.category_id3 = #{categoryId}
+            )
+        </if>
+        ORDER BY s.create_time DESC
+    </select>
+</mapper>

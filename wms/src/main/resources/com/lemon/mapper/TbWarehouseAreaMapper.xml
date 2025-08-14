@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.mapper.TbWarehouseAreaMapper">
+  <resultMap id="BaseResultMap" type="com.lemon.domain.TbWarehouseArea">
+    <!--@mbg.generated-->
+    <!--@Table tb_warehouse_area-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="warehouse_id" jdbcType="INTEGER" property="warehouseId" />
+    <result column="category" jdbcType="VARCHAR" property="category" />
+    <result column="saas_id" jdbcType="VARCHAR" property="saasId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, `name`, warehouse_id, category, saas_id, create_time, create_by, update_time, 
+    update_by, is_del
+  </sql>
+
+  <select id="getDictionary" resultType="com.lemon.domain.vo.TbDictionaryVo">
+        select *from tb_dictionary
+    </select>
+</mapper>
