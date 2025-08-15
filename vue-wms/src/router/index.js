@@ -7,9 +7,9 @@ import Category from '@/views/category/index.vue'
 import Supplier from '@/views/supplier/index.vue'
 import Goods from '@/views/goods/index.vue'
 import AddGoods from '@/views/goods/addGoods.vue'
-import ListGoods from '@/views/goods/list.vue'
 import Chat from '@/views/chat/index.vue'
 import Warehouse from '@/views/warehouse/index.vue'
+import Logistics from '@/views/logistics/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +23,7 @@ const router = createRouter({
       { path: 'addGoods', name:'addGoods', component: AddGoods },
       { path: 'chat', name:'chat', component: Chat },
       { path: 'warehouse', name:'warehouse', component: Warehouse },
+      { path: 'logistics', name:'logistics', component: Logistics },
      
     ]},
     { path: '/login', component: Login }

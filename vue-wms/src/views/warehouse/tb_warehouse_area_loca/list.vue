@@ -121,7 +121,8 @@ onMounted(() => {
 
     <el-table :data="warehouseAreaList" style="width: 100%">
       <el-table-column type="index" label="序号" width="80" />
-      <el-table-column prop="name" label="库区名称" />
+      <el-table-column prop="name" label="库区名称" width="100"/>
+      <el-table-column prop="createTime" label="createTime" width="300" />
       <el-table-column prop="warehouseId" label="仓库名称">
         <template #default="scope">
           {{ warehouseMap.get(scope.row.warehouseId) || scope.row.warehouseId }}

@@ -11,7 +11,7 @@ const deleteRef = ref('deleteRef')
 const addOrUpdateRef = ref('addOrUpdateRef')
 const warehouseList = ref([])
 const page = ref(1)
-const pageSize = ref(8)
+const pageSize = ref(6)
 const totalSize = ref(0)
 //分页查询数据
 const getPage = async () => {
@@ -91,10 +91,10 @@ onMounted(() => {
     <Query ref="queryRef" @search="handleSearch" @shuaX="handleRefreshZi"/>
 
     <el-table :data="warehouseList" style="width: 100%">
-      <el-table-column type="index" label="序号" width="100px" />
-      <el-table-column prop="name" label="仓库名称" />
+      <el-table-column type="index" label="序号" width="60px" />
+      <el-table-column prop="name" label="仓库名称" width="180px"/>
       <!-- 使用映射表显示省份名称 -->
-      <el-table-column label="所在省份">
+      <el-table-column label="所在省份" width="80px">
         <template #default="scope">
           <!-- 
             通过Map查找对应名称，如果找不到则显示原始ID
@@ -105,7 +105,7 @@ onMounted(() => {
         </template>
       </el-table-column>
       <!-- 使用映射表显示城市名称 -->
-      <el-table-column label="所在市区">
+      <el-table-column label="所在市区" width="80px">
         <template #default="scope">
           <!-- 
             通过Map查找对应名称，如果找不到则显示原始ID
@@ -115,9 +115,9 @@ onMounted(() => {
            {{ provinceMap.get(scope.row.cityId) || scope.row.cityId }}
         </template>
       </el-table-column>
-      <el-table-column prop="address" label="具体地址" />
+      <el-table-column prop="address" label="具体地址" width="200px" />
       <el-table-column prop="location" label="经纬度" />
-      <el-table-column prop="personChargeName" label="负责人名字" />
+      <el-table-column prop="personChargeName" label="负责人名字" width="100px"/>
       <el-table-column prop="saasId" label="SaaS标识" />
       <el-table-column prop="personChargeId" label="负责人ID" />
       <el-table-column label="操作" width="200px">
@@ -135,7 +135,7 @@ onMounted(() => {
     <el-pagination
       v-model:current-page="page"
       v-model:page-size="pageSize"
-      :page-sizes="[8, 16, 24, 32]"
+      :page-sizes="[6, 16, 24, 32]"
       :small="false"
       :disabled="false"
       :background="true"
