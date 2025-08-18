@@ -77,6 +77,7 @@
               <value>
                 <TableGenerateConfig>
                   <option name="deleteByPrimayKeyEnabled" value="false" />
+                  <option name="generatedKey" value="id" />
                   <option name="insertMethodEnabled" value="false" />
                   <option name="insertSelectiveMethodEnabled" value="false" />
                   <option name="javaModelName" value="TbLogisticsCompany" />
@@ -121,6 +122,70 @@
                   <option name="javaModelName" value="TbWarehouseAreaLoca" />
                   <option name="moduleName" value="wms" />
                   <option name="mybatisplusIdType" value="INPUT" />
+                  <option name="useActualColumnName" value="false" />
+                </TableGenerateConfig>
+              </value>
+            </entry>
+            <entry key="wms:warehousing_entry">
+              <value>
+                <TableGenerateConfig>
+                  <option name="deleteByPrimayKeyEnabled" value="false" />
+                  <option name="insertMethodEnabled" value="false" />
+                  <option name="insertSelectiveMethodEnabled" value="false" />
+                  <option name="javaModelName" value="WarehousingEntry" />
+                  <option name="moduleName" value="wms" />
+                  <option name="mybatisplusIdType" value="INPUT" />
+                  <option name="selectByPrimaryKeyEnabled" value="false" />
+                  <option name="updateByPrimaryKeySelectiveEnabled" value="false" />
+                  <option name="updateByPrimaykeyEnabled" value="false" />
+                  <option name="useActualColumnName" value="false" />
+                </TableGenerateConfig>
+              </value>
+            </entry>
+            <entry key="wms:warehousing_entry_details">
+              <value>
+                <TableGenerateConfig>
+                  <option name="deleteByPrimayKeyEnabled" value="false" />
+                  <option name="insertMethodEnabled" value="false" />
+                  <option name="insertSelectiveMethodEnabled" value="false" />
+                  <option name="javaModelName" value="WarehousingEntryDetails" />
+                  <option name="moduleName" value="wms" />
+                  <option name="mybatisplusIdType" value="INPUT" />
+                  <option name="selectByPrimaryKeyEnabled" value="false" />
+                  <option name="updateByPrimaryKeySelectiveEnabled" value="false" />
+                  <option name="updateByPrimaykeyEnabled" value="false" />
+                  <option name="useActualColumnName" value="false" />
+                </TableGenerateConfig>
+              </value>
+            </entry>
+            <entry key="wms:warehousing_entry_details_sort">
+              <value>
+                <TableGenerateConfig>
+                  <option name="deleteByPrimayKeyEnabled" value="false" />
+                  <option name="insertMethodEnabled" value="false" />
+                  <option name="insertSelectiveMethodEnabled" value="false" />
+                  <option name="javaModelName" value="WarehousingEntryDetailsSort" />
+                  <option name="moduleName" value="wms" />
+                  <option name="mybatisplusIdType" value="INPUT" />
+                  <option name="selectByPrimaryKeyEnabled" value="false" />
+                  <option name="updateByPrimaryKeySelectiveEnabled" value="false" />
+                  <option name="updateByPrimaykeyEnabled" value="false" />
+                  <option name="useActualColumnName" value="false" />
+                </TableGenerateConfig>
+              </value>
+            </entry>
+            <entry key="wms:warehousing_entry_up">
+              <value>
+                <TableGenerateConfig>
+                  <option name="deleteByPrimayKeyEnabled" value="false" />
+                  <option name="insertMethodEnabled" value="false" />
+                  <option name="insertSelectiveMethodEnabled" value="false" />
+                  <option name="javaModelName" value="WarehousingEntryUp" />
+                  <option name="moduleName" value="wms" />
+                  <option name="mybatisplusIdType" value="INPUT" />
+                  <option name="selectByPrimaryKeyEnabled" value="false" />
+                  <option name="updateByPrimaryKeySelectiveEnabled" value="false" />
+                  <option name="updateByPrimaykeyEnabled" value="false" />
                   <option name="useActualColumnName" value="false" />
                 </TableGenerateConfig>
               </value>

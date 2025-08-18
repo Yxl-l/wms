@@ -22,6 +22,11 @@ public class TbWarehouseAreaLoca {
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+    /**
+     * 区域ID
+     */
+    @TableField(value = "area_id")
+    private Long areaId;
 
     /**
      * 库位编号

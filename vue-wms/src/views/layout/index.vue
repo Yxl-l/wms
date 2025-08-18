@@ -86,6 +86,10 @@ const exit = () => {
               <el-icon><Collection /></el-icon>
               <span>物流公司及价格</span>
             </el-menu-item>
+             <el-menu-item index="/warehousingEntry">
+              <el-icon><Collection /></el-icon>
+              <span>收货管理</span>
+            </el-menu-item>
             <el-menu-item index="/chat">
               <el-icon><Collection /></el-icon>
               <span>聊天室</span>

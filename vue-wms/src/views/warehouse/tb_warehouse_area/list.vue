@@ -1,9 +1,12 @@
 <script setup>
-import { getPageAreaApi, getDictApi, getWarehouseAllApi } from "@/api/warehouse";
+import { getPageAreaApi, getDictApi, getWarehouseAllApi, deleteAreaApi, getAreaDetailApi } from "@/api/warehouse";
 import Query from "../tb_warehouse_area/query.vue";
 import { onMounted, ref } from "vue";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import EditArea from './edit.vue'
 
 const queryRef = ref();
+const editRef = ref() // 修改组件的引用
 
 // 分页相关
 const deleteRef = ref('deleteRef')
@@ -95,17 +98,48 @@ const handleRefresh = () => {
   getPage();
 };
 
-// 编辑操作
+// 处理编辑事件
 const handleEdit = (row) => {
-  console.log('编辑库区:', row);
-  // 这里可以打开编辑弹窗或跳转到编辑页面
-};
+  editRef.value.editArea(row)
+}
 
-// 删除操作
+// 处理删除事件
 const handleDelete = (row) => {
-  console.log('删除库区:', row);
-  // 这里可以弹出确认框，然后调用删除接口
-};
+  ElMessageBox.confirm(
+    '确定要删除该库区吗？',
+    '删除确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(async () => {
+    try {
+      const res = await deleteAreaApi(row.id)
+      if (res.code == 1) {
+        ElMessage.success('删除成功')
+        handleRefresh() // 删除成功后刷新列表
+      } else {
+        ElMessage.error('删除失败')
+      }
+    } catch (error) {
+      console.error(error)
+      ElMessage.error('删除异常')
+    }
+  }).catch(() => {
+    ElMessage.info('已取消删除')
+  })
+}
+
+// 修改完成后刷新列表
+const handleRefreshEdit = () => {
+  handleRefresh()
+}
+
+// 暴露方法给父组件使用
+defineExpose({
+  handleRefresh
+})
 
 onMounted(() => {
   getDictData();
@@ -118,6 +152,9 @@ onMounted(() => {
   <div id="box">
     <!-- 添加 ref 绑定   搜索事件  刷新事件  刷新界面-->
     <Query ref="queryRef" @search="handleSearch" @shuaX="handleRefreshZi"/>
+    
+    <!-- 修改组件 -->
+    <EditArea ref="editRef" @refresh="handleRefreshEdit" />
 
     <el-table :data="warehouseAreaList" style="width: 100%">
       <el-table-column type="index" label="序号" width="80" />
@@ -132,17 +169,11 @@ onMounted(() => {
           {{ categoryMap.get(scope.row.category) || scope.row.category }}
         </template>
       </el-table-column>
-      <el-table-column prop="saasId" label="SaaS标识" >
-        cxk123
-      </el-table-column>
+      <el-table-column prop="saasId" label="SaaS标识" />
       <el-table-column label="操作" width="200">
         <template #default="scope">
-          <el-button type="primary" size="mini" @click="handleEdit(scope.row)">
-            编辑
-          </el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">
-            删除
-          </el-button>
+          <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

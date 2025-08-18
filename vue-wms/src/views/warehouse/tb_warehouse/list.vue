@@ -1,10 +1,13 @@
 <script setup>
 import { getPcdAllApi } from "@/api/supplier";//获取地区
-import { getPageApi } from "@/api/warehouse";//分页查询c获取仓库数据
+import { getPageApi, deleteWarehouseApi } from "@/api/warehouse";//分页查询获取仓库数据
 import Query from "./query.vue";
 import { onMounted, ref, computed } from "vue";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import EditWarehouse from './edit.vue'
 
 const queryRef = ref();
+const editRef = ref() // 修改组件的引用
 
 // 分页相关
 const deleteRef = ref('deleteRef')
@@ -13,6 +16,7 @@ const warehouseList = ref([])
 const page = ref(1)
 const pageSize = ref(6)
 const totalSize = ref(0)
+
 //分页查询数据
 const getPage = async () => {
   let res = await getPageApi(
@@ -24,16 +28,50 @@ const getPage = async () => {
   warehouseList.value=res.rows
   totalSize.value=res.total
 };
+
 const handleSizeChange = (val) => {
   pageSize.value = val
   page.value = 1
   getPage()
 }
+
 const handleCurrentChange = (val) => {
   page.value = val
   getPage()
 }
 
+// 处理编辑事件
+const handleEdit = (row) => {
+  editRef.value.editWarehouse(row)
+}
+
+// 处理删除事件
+const handleDelete = (row) => {
+  ElMessageBox.confirm(
+    '确定要删除该仓库吗？',
+    '删除确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(async () => {
+    try {
+      const res = await deleteWarehouseApi(row.id)
+      if (res.code == 1) {
+        ElMessage.success('删除成功')
+        handleRefresh() // 删除成功后刷新列表
+      } else {
+        ElMessage.error('删除失败')
+      }
+    } catch (error) {
+      console.error(error)
+      ElMessage.error('删除异常')
+    }
+  }).catch(() => {
+    ElMessage.info('已取消删除')
+  })
+}
 
 // 城市列表普通结构
 const PcdAllList = ref([])
@@ -62,16 +100,14 @@ const provinceMap = computed(() => {
   return map;
 });
 
-
-
 // 处理子组件的搜索事件
 const handleSearch = (searchParams) => {
   getPage(searchParams.name, searchParams.employeeId);
 };
+
 // 处理子组件的刷新事件
 const handleRefreshZi = () => {
   handleRefresh();
-
 };
 
 //刷新界面
@@ -79,6 +115,16 @@ const handleRefresh = () => {
   getPage();
   getPcdAllList();
 };
+
+// 修改完成后刷新列表
+const handleRefreshEdit = () => {
+  handleRefresh()
+}
+
+// 暴露方法给父组件使用
+defineExpose({
+  handleRefresh
+})
 
 onMounted(() => {
   handleRefresh();
@@ -89,6 +135,9 @@ onMounted(() => {
   <div id="box">
     <!-- 添加 ref 绑定   搜索事件  刷新事件  刷新界面-->
     <Query ref="queryRef" @search="handleSearch" @shuaX="handleRefreshZi"/>
+    
+    <!-- 修改组件 -->
+    <EditWarehouse ref="editRef" @refresh="handleRefreshEdit" />
 
     <el-table :data="warehouseList" style="width: 100%">
       <el-table-column type="index" label="序号" width="60px" />
@@ -96,23 +145,13 @@ onMounted(() => {
       <!-- 使用映射表显示省份名称 -->
       <el-table-column label="所在省份" width="80px">
         <template #default="scope">
-          <!-- 
-            通过Map查找对应名称，如果找不到则显示原始ID
-            provinceMap.get(scope.row.provinceId): 查找省份名称
-            || scope.row.provinceId: 查找失败时显示原始ID作为降级方案
-          -->
           {{ provinceMap.get(scope.row.provinceId) || scope.row.provinceId }}
         </template>
       </el-table-column>
       <!-- 使用映射表显示城市名称 -->
       <el-table-column label="所在市区" width="80px">
         <template #default="scope">
-          <!-- 
-            通过Map查找对应名称，如果找不到则显示原始ID
-            cityMap.get(scope.row.cityId): 查找城市名称
-            || scope.row.cityId: 查找失败时显示原始ID作为降级方案
-          -->   
-           {{ provinceMap.get(scope.row.cityId) || scope.row.cityId }}
+          {{ provinceMap.get(scope.row.cityId) || scope.row.cityId }}
         </template>
       </el-table-column>
       <el-table-column prop="address" label="具体地址" width="200px" />
@@ -122,12 +161,8 @@ onMounted(() => {
       <el-table-column prop="personChargeId" label="负责人ID" />
       <el-table-column label="操作" width="200px">
         <template #default="scope">
-          <el-button type="primary" size="mini" @click="handleEdit(scope.row)"
-            >编辑</el-button
-          >
-          <el-button type="danger" size="mini" @click="handleDelete(scope.row)"
-            >删除</el-button
-          >
+          <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

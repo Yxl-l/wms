@@ -1,10 +1,17 @@
 package com.lemon.domain.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class WarehouseAreaLocaDto {
     /**
-     *库区name
+     *库区id
      */
-    private String name;
+    private Integer areaId;
     /**
      * 所属仓库id
      */

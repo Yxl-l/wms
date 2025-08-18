@@ -1,37 +1,22 @@
 <script setup>
-import { getPageAreaApi, getDictApi, getWarehouseAllApi } from "@/api/warehouse";
-import Query from "../tb_warehouse_area/query.vue";
-import { onMounted, ref } from "vue";
+import { getPageAreaLocaApi, getWarehouseAllApi, getAreaByWarehouseIdApi, deleteAreaLocaApi } from "@/api/warehouse";
+import Query from "../tb_warehouse_area_loca/query.vue";
+import { onMounted, ref, watch } from "vue";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import EditAreaLoca from './edit.vue'
 
 const queryRef = ref();
+const editRef = ref() // 修改组件的引用
 
 // 分页相关
-const deleteRef = ref('deleteRef')
-const addOrUpdateRef = ref('addOrUpdateRef')
-const warehouseAreaList = ref([])
+const warehouseAreaLocaList = ref([])
 const page = ref(1)
 const pageSize = ref(8)
 const totalSize = ref(0)
 
-// 数据字典映射
-const categoryMap = ref(new Map())
+// 数据映射
 const warehouseMap = ref(new Map())
-
-// 获取库区类型字典数据
-const getDictData = async () => {
-  try {
-    const res = await getDictApi();
-    if (res.data) {
-      // 根据返回的数据结构，假设数据在res.data中
-      res.data.forEach(item => {
-        // 假设字典项有code和name字段
-        categoryMap.value.set(item.dictCode, item.dictValue);
-      });
-    }
-  } catch (error) {
-    console.error("获取字典数据失败:", error);
-  }
-};
+const areaMap = ref(new Map())
 
 // 获取所有仓库数据用于映射
 const getWarehouseData = async () => {
@@ -47,19 +32,34 @@ const getWarehouseData = async () => {
   }
 };
 
+// 根据仓库ID获取库区数据
+const getAreaDataByWarehouseId = async (warehouseId) => {
+  try {
+    if (!warehouseId) return;
+    const res = await getAreaByWarehouseIdApi(warehouseId);
+    if (res.rows) {
+      res.rows.forEach(item => {
+        areaMap.value.set(item.id, item.name);
+      });
+    }
+  } catch (error) {
+    console.error("获取库区数据失败:", error);
+  }
+};
+
 // 分页查询数据
 const getPage = async () => {
   try {
-    let res = await getPageAreaApi(
+    let res = await getPageAreaLocaApi(
       page.value,
       pageSize.value,
-      queryRef.value.searchForm.warehouseId,
-      queryRef.value.searchForm.name
+      queryRef.value?.searchForm?.areaId || '',
+      queryRef.value?.searchForm?.locaCode || ''
     );
-    warehouseAreaList.value = res.rows || []
+    warehouseAreaLocaList.value = res.rows || []
     totalSize.value = res.total || 0
   } catch (error) {
-    console.error("获取库区数据失败:", error);
+    console.error("获取库位数据失败:", error);
   }
 };
 
@@ -88,27 +88,67 @@ const handleRefreshZi = () => {
 // 刷新界面
 const handleRefresh = () => {
   if (queryRef.value) {
-    queryRef.value.searchForm.name = '';
+    queryRef.value.searchForm.locaCode = '';
+    queryRef.value.searchForm.areaId = '';
     queryRef.value.searchForm.warehouseId = '';
   }
   page.value = 1;
   getPage();
 };
 
-// 编辑操作
+// 处理编辑事件
 const handleEdit = (row) => {
-  console.log('编辑库区:', row);
-  // 这里可以打开编辑弹窗或跳转到编辑页面
-};
+  editRef.value.editAreaLoca(row)
+}
 
-// 删除操作
+// 处理删除事件
 const handleDelete = (row) => {
-  console.log('删除库区:', row);
-  // 这里可以弹出确认框，然后调用删除接口
-};
+  ElMessageBox.confirm(
+    '确定要删除该库位吗？',
+    '删除确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(async () => {
+    try {
+      const res = await deleteAreaLocaApi(row.id)
+      if (res.code == 1) {
+        ElMessage.success('删除成功')
+        handleRefresh() // 删除成功后刷新列表
+      } else {
+        ElMessage.error('删除失败')
+      }
+    } catch (error) {
+      console.error(error)
+      ElMessage.error('删除异常')
+    }
+  }).catch(() => {
+    ElMessage.info('已取消删除')
+  })
+}
+
+// 修改完成后刷新列表
+const handleRefreshEdit = () => {
+  handleRefresh()
+}
+
+// 监听仓库选择变化，动态加载库区
+watch(() => queryRef.value?.searchForm?.warehouseId, (newVal) => {
+  if (newVal) {
+    getAreaDataByWarehouseId(newVal);
+  } else {
+    areaMap.value.clear();
+  }
+})
+
+// 暴露方法给父组件使用
+defineExpose({
+  handleRefresh
+})
 
 onMounted(() => {
-  getDictData();
   getWarehouseData();
   getPage();
 });
@@ -118,32 +158,32 @@ onMounted(() => {
   <div id="box">
     <!-- 添加 ref 绑定   搜索事件  刷新事件  刷新界面-->
     <Query ref="queryRef" @search="handleSearch" @shuaX="handleRefreshZi"/>
+    
+    <!-- 修改组件 -->
+    <EditAreaLoca ref="editRef" @refresh="handleRefreshEdit" />
 
-    <el-table :data="warehouseAreaList" style="width: 100%">
+    <el-table :data="warehouseAreaLocaList" style="width: 100%">
       <el-table-column type="index" label="序号" width="80" />
-      <el-table-column prop="name" label="库区名称" width="100"/>
-      <el-table-column prop="createTime" label="createTime" width="300" />
-      <el-table-column prop="warehouseId" label="仓库名称">
+      <el-table-column prop="locaCode" label="库位编号" width="150"/>
+      <el-table-column prop="areaId" label="所属库区">
         <template #default="scope">
-          {{ warehouseMap.get(scope.row.warehouseId) || scope.row.warehouseId }}
+          {{ areaMap.get(scope.row.areaId) || scope.row.areaId }}
         </template>
       </el-table-column>
-      <el-table-column prop="category" label="库区类型">
+      <el-table-column prop="locaLen" label="长度(cm)" width="100"/>
+      <el-table-column prop="locaWidth" label="宽度(cm)" width="100"/>
+      <el-table-column prop="locaHeight" label="高度(cm)" width="100"/>
+      <el-table-column prop="localVolume" label="容积(cm³)" width="120"/>
+      <el-table-column prop="localBearingCapacity" label="承重(kg)" width="120"/>
+      <el-table-column prop="tunnelNumber" label="巷道号" width="100"/>
+      <el-table-column prop="shelfNumber" label="货架号" width="100"/>
+      <el-table-column prop="layerNumber" label="层号" width="100"/>
+      <el-table-column prop="saasId" label="SaaS标识" width="150"/>
+      <el-table-column prop="createTime" label="创建时间" width="180"/>
+      <el-table-column label="操作" width="200" fixed="right">
         <template #default="scope">
-          {{ categoryMap.get(scope.row.category) || scope.row.category }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="saasId" label="SaaS标识" >
-        cxk123
-      </el-table-column>
-      <el-table-column label="操作" width="200">
-        <template #default="scope">
-          <el-button type="primary" size="mini" @click="handleEdit(scope.row)">
-            编辑
-          </el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">
-            删除
-          </el-button>
+          <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

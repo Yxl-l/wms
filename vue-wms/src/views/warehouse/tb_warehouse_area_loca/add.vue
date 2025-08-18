@@ -1,111 +1,265 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import {
   getWarehouseAllApi,
-  addAreaApi,
-  getDictApi,
+  getAreaByWarehouseIdApi,
+  addAreaLocaApi
 } from "@/api/warehouse";
-
 
 // 定义响应式数据
 const dialogFormVisible = ref(false); //控制对话框的显示与隐藏
-const title = ref("添加库区");
+const title = ref("添加库位");
 const ruleFormRef = ref(null);
 
-// 库区表单数据
-const warehouseAreaForm = ref({
-  name: "",
-  warehouseId: "",
-  category: "",
+// 库位表单数据
+const warehouseAreaLocaForm = ref({
+  areaId: "",
+  locaCode: "",
+  locaLen: "",
+  locaWidth: "",
+  locaHeight: "",
+  localVolume: "",
+  localBearingCapacity: "",
+  tunnelNumber: "",
+  shelfNumber: "",
+  layerNumber: "",
 });
 
-// 获取数据字典里的库区类型
-const Dict = ref([]);
-const getDict = async () => {
-  const res = await getDictApi();
-  Dict.value = res.data;
-};
-//获取全部仓库
-const warehouse = ref([]);
+// 获取所有仓库数据
+const warehouseList = ref([]);
 const getWarehouseAll = async () => {
-  const res = await getWarehouseAllApi();
-  warehouse.value = res.data;
+  try {
+    const res = await getWarehouseAllApi();
+    warehouseList.value = res.data || [];
+  } catch (error) {
+    ElMessage.error("获取仓库数据失败");
+  }
+};
+
+// 获取库区数据（根据仓库ID）
+const areaList = ref([]);
+const getAreaByWarehouseId = async (warehouseId) => {
+  try {
+    if (!warehouseId) {
+      areaList.value = [];
+      return;
+    }
+    const res = await getAreaByWarehouseIdApi(warehouseId);
+    areaList.value = res.rows || [];
+  } catch (error) {
+    ElMessage.error("获取库区数据失败");
+  }
 };
 
 // 表单验证规则
 const rules = ref({
-  name: [
-    { required: true, message: "请输入仓库名称", trigger: "blur" },
-    { min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur" },
+  areaId: [
+    { required: true, message: "请选择所属库区", trigger: "change" }
   ],
-
+  locaCode: [
+    { required: true, message: "请输入库位编号", trigger: "blur" },
+    { min: 1, max: 200, message: "长度在 1 到 200 个字符", trigger: "blur" }
+  ],
+  locaLen: [
+    { required: true, message: "请输入库位长度", trigger: "blur" },
+    { pattern: /^\d+$/, message: "请输入数字", trigger: "blur" }
+  ],
+  locaWidth: [
+    { required: true, message: "请输入库位宽度", trigger: "blur" },
+    { pattern: /^\d+$/, message: "请输入数字", trigger: "blur" }
+  ],
+  locaHeight: [
+    { required: true, message: "请输入库位高度", trigger: "blur" },
+    { pattern: /^\d+$/, message: "请输入数字", trigger: "blur" }
+  ],
+  localVolume: [
+    { required: true, message: "请输入库位容积", trigger: "blur" },
+    { pattern: /^\d+$/, message: "请输入数字", trigger: "blur" }
+  ],
+  localBearingCapacity: [
+    { required: true, message: "请输入库位承重", trigger: "blur" },
+    { pattern: /^\d+$/, message: "请输入数字", trigger: "blur" }
+  ],
+  tunnelNumber: [
+    { required: true, message: "请输入巷道号", trigger: "blur" },
+    { min: 1, max: 30, message: "长度在 1 到 30 个字符", trigger: "blur" }
+  ],
+  shelfNumber: [
+    { required: true, message: "请输入货架号", trigger: "blur" },
+    { min: 1, max: 30, message: "长度在 1 到 30 个字符", trigger: "blur" }
+  ],
+  layerNumber: [
+    { required: true, message: "请输入层号", trigger: "blur" },
+    { min: 1, max: 30, message: "长度在 1 到 30 个字符", trigger: "blur" }
+  ],
 });
 
-// 打开添加库区对话框
-const addWarehouseArea = () => {
+// 打开添加库位对话框
+const addWarehouseAreaLoca = () => {
   dialogFormVisible.value = true;
   // 重置表单数据
-  Object.assign(warehouseAreaForm.value, {
-   name: "",
-  warehouseId: "",
-  category: "",
+  Object.assign(warehouseAreaLocaForm.value, {
+    areaId: "",
+    locaCode: "",
+    locaLen: "",
+    locaWidth: "",
+    locaHeight: "",
+    localVolume: "",
+    localBearingCapacity: "",
+    tunnelNumber: "",
+    shelfNumber: "",
+    layerNumber: "",
   });
 };
-// 保存仓库信息
-const save = async () => {
-  // 调用API保存数据
-  console.log(warehouseAreaForm.value)
-  let res = await addAreaApi(warehouseAreaForm.value)
-  if(res){
-    ElMessage.success('库区添加成功')
-  }else{
-    ElMessage.error('库区添加失败')
-  }   
-  dialogFormVisible.value = false
-}
 
-// 组件挂载时获取地址数据
+// 保存库位信息
+const save = async () => {
+  if (!ruleFormRef.value) return
+  
+  await ruleFormRef.value.validate(async (valid) => {
+    if (valid) {
+      try {
+        const res = await addAreaLocaApi(warehouseAreaLocaForm.value)
+        if (res.code == 1) {
+          ElMessage.success('库位添加成功')
+          dialogFormVisible.value = false
+          // 通知父组件刷新列表
+          emit('refresh')
+        } else {
+          ElMessage.error('添加库位失败')
+        }
+      } catch (error) {
+        ElMessage.error('添加库位异常')
+      }
+    }
+  })
+};
+
+// 监听仓库选择变化
+const handleWarehouseChange = (warehouseId) => {
+  getAreaByWarehouseId(warehouseId);
+  warehouseAreaLocaForm.value.areaId = ""; // 重置库区选择
+};
+
+// 定义emit事件，用于通知父组件刷新数据
+const emit = defineEmits(['refresh'])
+
+// 组件挂载时获取数据
 onMounted(() => {
-  getDict();
   getWarehouseAll();
 });
 </script>
 
 <template>
   <div>
-    <el-button type="primary" @click="addWarehouseArea">添加库位</el-button>
+    <el-button type="primary" @click="addWarehouseAreaLoca">添加库位</el-button>
 
-    <el-dialog style="width: 400px" v-model="dialogFormVisible" :title="title">
+    <el-dialog style="width: 500px" v-model="dialogFormVisible" :title="title">
       <el-form
-        :model="warehouseAreaForm"
+        :model="warehouseAreaLocaForm"
         :rules="rules"
         ref="ruleFormRef"
         label-width="auto"
       >
-        <el-form-item label="库区名字" prop="name">
-          <el-input v-model="warehouseAreaForm.name" placeholder="请输入库区名称" />
-        </el-form-item>
-        <el-form-item label="库区所属仓库" prop="warehouseId">
-          <el-select v-model="warehouseAreaForm.warehouseId" placeholder="请选择仓库">
-            <el-option
-              v-for="item in warehouse"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-         <el-form-item label="库区类型" prop="category">
-          <el-select v-model="warehouseAreaForm.category" placeholder="请选择库区类型">
-            <el-option
-              v-for="item in Dict"
-              :key="item.id"
-              :label="item.dictValue"
-              :value="item.dictCode"
-            />
-          </el-select>
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="所属仓库" prop="warehouseId">
+              <el-select 
+                v-model="warehouseAreaLocaForm.warehouseId" 
+                placeholder="请选择仓库"
+                @change="handleWarehouseChange"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="item in warehouseList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          
+          <el-col :span="12">
+            <el-form-item label="所属库区" prop="areaId">
+              <el-select 
+                v-model="warehouseAreaLocaForm.areaId" 
+                placeholder="请选择库区"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="item in areaList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="库位编号" prop="locaCode">
+              <el-input v-model="warehouseAreaLocaForm.locaCode" placeholder="请输入库位编号" />
+            </el-form-item>
+          </el-col>
+          
+          <el-col :span="12">
+            <el-form-item label="巷道号" prop="tunnelNumber">
+              <el-input v-model="warehouseAreaLocaForm.tunnelNumber" placeholder="请输入巷道号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="货架号" prop="shelfNumber">
+              <el-input v-model="warehouseAreaLocaForm.shelfNumber" placeholder="请输入货架号" />
+            </el-form-item>
+          </el-col>
+          
+          <el-col :span="12">
+            <el-form-item label="层号" prop="layerNumber">
+              <el-input v-model="warehouseAreaLocaForm.layerNumber" placeholder="请输入层号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-form-item label="长度(cm)" prop="locaLen">
+              <el-input v-model="warehouseAreaLocaForm.locaLen" placeholder="请输入长度" />
+            </el-form-item>
+          </el-col>
+          
+          <el-col :span="8">
+            <el-form-item label="宽度(cm)" prop="locaWidth">
+              <el-input v-model="warehouseAreaLocaForm.locaWidth" placeholder="请输入宽度" />
+            </el-form-item>
+          </el-col>
+          
+          <el-col :span="8">
+            <el-form-item label="高度(cm)" prop="locaHeight">
+              <el-input v-model="warehouseAreaLocaForm.locaHeight" placeholder="请输入高度" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="容积(cm³)" prop="localVolume">
+              <el-input v-model="warehouseAreaLocaForm.localVolume" placeholder="请输入容积" />
+            </el-form-item>
+          </el-col>
+          
+          <el-col :span="12">
+            <el-form-item label="承重(kg)" prop="localBearingCapacity">
+              <el-input v-model="warehouseAreaLocaForm.localBearingCapacity" placeholder="请输入承重" />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
 
       <template #footer>

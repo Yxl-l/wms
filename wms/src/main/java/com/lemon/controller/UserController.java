@@ -19,7 +19,20 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
+    /**
+     * 获取全部员工
+     * @param
+     * @return
+     */
+    @GetMapping("/all")
+    public Result getAll(){
+        return Result.success(userService.list());
+    }
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id){
         return userService.removeById(id) ? Result.success() : Result.error("删除失败");

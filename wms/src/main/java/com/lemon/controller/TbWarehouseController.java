@@ -50,4 +50,31 @@ public class TbWarehouseController {
         return Result.success(warehouseService.list());
     }
 
+    /**
+     * 修改仓库
+     */
+    @PutMapping
+    public Result update(@RequestBody TbWarehouse warehouse) {
+        log.info("修改仓库");
+        warehouse.setUpdateTime(LocalDateTime.now());
+        return warehouseService.updateById(warehouse) ? Result.success("修改成功") : Result.error("修改失败");
+    }
+
+    /**
+     * 删除仓库
+     */
+    @DeleteMapping("/{id}")
+    public Result delete(@PathVariable Long id) {
+        log.info("删除仓库");
+        return warehouseService.removeById(id) ? Result.success("删除成功") : Result.error("删除失败");
+    }
+
+    /**
+     * 根据ID查询仓库
+     */
+    @GetMapping("/{id}")
+    public Result getById(@PathVariable Long id) {
+        log.info("根据ID查询仓库");
+        return Result.success(warehouseService.getById(id));
+    }
 }
