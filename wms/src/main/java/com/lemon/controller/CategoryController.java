@@ -44,4 +44,7 @@ public class CategoryController {
         int count = categoryService.deleteById(id);
         return count > 0 ? Result.success() : Result.error("删除失败,请先删除子分类");
     }
+    /**
+     * 获取所有sku
+     */
 }

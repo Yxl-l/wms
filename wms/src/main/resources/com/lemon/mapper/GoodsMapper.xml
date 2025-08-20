@@ -101,4 +101,8 @@
         </if>
         ORDER BY s.create_time DESC
     </select>
+
+    <select id="getAllSku" resultType="com.lemon.domain.SKU">
+        select *from sku where is_del=1
+    </select>
 </mapper>

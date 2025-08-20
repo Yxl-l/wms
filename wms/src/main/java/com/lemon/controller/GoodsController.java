@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /**
  * 商品
@@ -43,4 +45,13 @@ private final GoodsService goodsService;
         PageResult<GoodsVo> pageResult = goodsService.getGoodsAll(goodsDto);
         return Result.success(pageResult);
     }
+    /**
+     * 获取所有sku
+     */
+    @GetMapping("/sku")
+    public Result getAllSku(){
+        List<SKU> all = goodsService.getAllSku();
+        return Result.success(all);
+    }
+
 }

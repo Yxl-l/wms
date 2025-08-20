@@ -15,4 +15,6 @@ public interface GoodsMapper extends BaseMapper<SPU> {
     void addSku(SKU sku);
 
     List<GoodsVo> getGoodsAll(GoodsDto goodsDto);
+
+    List<SKU> getAllSku();
 }

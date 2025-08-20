@@ -62,4 +62,9 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, SPU> implements G
         Page<GoodsVo> page = (Page<GoodsVo>) goodsVos;
         return new PageResult<>(page.getTotal(),page.getResult());
     }
+
+    @Override
+    public List<SKU> getAllSku() {
+        return goodsMapper.getAllSku();
+    }
 }
