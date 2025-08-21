@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import AddWarehousingEntryDetails from './add.vue'
+
 import ListWarehousingEntryDetails from './list.vue'
 
 const listRef = ref()
@@ -15,12 +15,9 @@ const handleRefresh = () => {
 
 <template>
  <div>
-    分拣货物明细
+  分拣货物进度
     
-    <!-- 添加 -->
-    <div class="add"> 
-      <AddWarehousingEntryDetails @refresh="handleRefresh" /> 
-    </div>
+    
 
     <!-- 列表 -->
     <div class="list"> 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.mapper.WarehousingEntryDetailsMapper">
+  <resultMap id="BaseResultMap" type="com.lemon.domain.WarehousingEntryDetails">
+    <!--@mbg.generated-->
+    <!--@Table warehousing_entry_details-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="supplier_id" jdbcType="BIGINT" property="supplierId" />
+    <result column="price" jdbcType="INTEGER" property="price" />
+    <result column="warehousing_entry_id" jdbcType="BIGINT" property="warehousingEntryId" />
+    <result column="real_arrival_time" jdbcType="TIMESTAMP" property="realArrivalTime" />
+    <result column="predicted_arrival_time" jdbcType="TIMESTAMP" property="predictedArrivalTime" />
+    <result column="unload_emp_id" jdbcType="INTEGER" property="unloadEmpId" />
+    <result column="unload_time" jdbcType="TIMESTAMP" property="unloadTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="saas_id" jdbcType="VARCHAR" property="saasId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, sku_id, `count`, supplier_id, price, warehousing_entry_id, real_arrival_time, 
+    predicted_arrival_time, unload_emp_id, unload_time, `status`, saas_id, create_time, 
+    create_by, update_time, update_by, is_del
+  </sql>
+</mapper>

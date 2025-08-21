@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.mapper.TbLogisticsPriceMapper">
+  <resultMap id="BaseResultMap" type="com.lemon.domain.TbLogisticsPrice">
+    <!--@mbg.generated-->
+    <!--@Table tb_logistics_price-->
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="cube_price" jdbcType="INTEGER" property="cubePrice" />
+    <result column="kilogram_price" jdbcType="INTEGER" property="kilogramPrice" />
+    <result column="trans_kilometer_price" jdbcType="INTEGER" property="transKilometerPrice" />
+    <result column="category" jdbcType="INTEGER" property="category" />
+    <result column="logistics_company_id" jdbcType="INTEGER" property="logisticsCompanyId" />
+    <result column="saas_id" jdbcType="VARCHAR" property="saasId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, cube_price, kilogram_price, trans_kilometer_price, category, logistics_company_id, 
+    saas_id, create_time, create_by, update_time, update_by, is_del
+  </sql>
+</mapper>

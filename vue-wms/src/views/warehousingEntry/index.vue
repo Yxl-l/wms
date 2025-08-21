@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import warehousing_entry from './warehousing_entry/index.vue';
 import warehousing_entry_details from './warehousing_entry_details/index.vue';
 import warehousing_entry_details_dfj from './warehousing_entry_details_dfj/index.vue';
+import warehousing_entry_details_jd from './warehousing_entry_details_jd/index.vue';
 import warehousing_entry_details_sort from './warehousing_entry_details_sort/index.vue';
 import warehousing_entry_up from './warehousing_entry_up/index.vue';
 import warehousing_entry_tz from './warehousing_entryTz/index.vue';
@@ -56,7 +57,17 @@ import warehousing_entry_tz from './warehousing_entryTz/index.vue';
           <!-- 添加 custom-tabs-label 类 -->
           <span class="custom-tabs-label">
             <el-icon><CreditCard /></el-icon>
-            <span> 入库明细分拣</span>
+            <span> 分拣货物进度</span>
+          </span>
+        </template>
+        <warehousing_entry_details_jd/>
+      </el-tab-pane>
+       <el-tab-pane>
+        <template #label>
+          <!-- 添加 custom-tabs-label 类 -->
+          <span class="custom-tabs-label">
+            <el-icon><CreditCard /></el-icon>
+            <span> 分拣货物明细</span>
           </span>
         </template>
         <warehousing_entry_details_sort/>

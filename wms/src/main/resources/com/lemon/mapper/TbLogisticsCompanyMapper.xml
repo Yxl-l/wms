@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.mapper.TbLogisticsCompanyMapper">
+  <resultMap id="BaseResultMap" type="com.lemon.domain.TbLogisticsCompany">
+    <!--@mbg.generated-->
+    <!--@Table tb_logistics_company-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="min_price" jdbcType="INTEGER" property="minPrice" />
+    <result column="link_user" jdbcType="VARCHAR" property="linkUser" />
+    <result column="linke_phone" jdbcType="VARCHAR" property="linkePhone" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="saas_id" jdbcType="VARCHAR" property="saasId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, company_name, min_price, link_user, linke_phone, sort, saas_id, create_time, 
+    create_by, update_time, update_by, is_del
+  </sql>
+</mapper>

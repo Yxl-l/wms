@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.mapper.WarehousingEntryUpMapper">
+  <resultMap id="BaseResultMap" type="com.lemon.domain.WarehousingEntryUp">
+    <!--@mbg.generated-->
+    <!--@Table warehousing_entry_up-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+    <result column="warehouse_id" jdbcType="INTEGER" property="warehouseId" />
+    <result column="warehouse_area_id" jdbcType="INTEGER" property="warehouseAreaId" />
+    <result column="warehouse_area_loca_id" jdbcType="INTEGER" property="warehouseAreaLocaId" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="details_sort_id" jdbcType="BIGINT" property="detailsSortId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="saas_id" jdbcType="VARCHAR" property="saasId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, sku_id, warehouse_id, warehouse_area_id, warehouse_area_loca_id, `count`, details_sort_id, 
+    `status`, saas_id, create_time, create_by, update_time, update_by, is_del
+  </sql>
+</mapper>
