@@ -11,7 +11,7 @@
  Target Server Version : 80034 (8.0.34)
  File Encoding         : 65001
 
- Date: 20/08/2025 23:10:19
+ Date: 23/08/2025 20:56:18
 */
 
 SET NAMES utf8mb4;
@@ -547,14 +547,15 @@ CREATE TABLE `warehousing_entry`  (
   `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
   `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '入库单表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '入库单表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of warehousing_entry
 -- ----------------------------
-INSERT INTO `warehousing_entry` VALUES (1, 1, '1113', 10000, '2025-08-12 00:00:00', 2, 0, 0, 1, 0, NULL, '2025-08-18 23:08:26', NULL, '2025-08-20 21:29:18', NULL, NULL);
-INSERT INTO `warehousing_entry` VALUES (2, 22, '222', 6666, '2025-08-04 00:00:00', 3, 9, 0, 3, 9, NULL, '2025-08-18 23:17:24', NULL, NULL, NULL, NULL);
-INSERT INTO `warehousing_entry` VALUES (3, 1, '3', 3, '2025-08-12 00:00:00', 2, 3, 3, 4, 3, NULL, '2025-08-19 00:45:57', NULL, '2025-08-20 23:03:04', NULL, NULL);
+INSERT INTO `warehousing_entry` VALUES (1, 1, '1111', 10000, '2025-08-12 00:00:00', 2, 0, 0, 1, 0, NULL, '2025-08-18 23:08:26', NULL, '2025-08-23 00:34:09', NULL, NULL);
+INSERT INTO `warehousing_entry` VALUES (2, 1, '222', 6666, '2025-08-04 00:00:00', 3, 9, 0, 3, 9, NULL, '2025-08-18 23:17:24', NULL, '2025-08-23 00:34:41', NULL, NULL);
+INSERT INTO `warehousing_entry` VALUES (3, 1, '3', 3, '2025-08-12 00:00:00', 2, 3, 3, 4, 3, NULL, '2025-08-19 00:45:57', NULL, '2025-08-22 22:04:25', NULL, NULL);
+INSERT INTO `warehousing_entry` VALUES (4, 1, '666', 53, '2025-08-08 00:00:00', 12, 0, 0, 4, 0, NULL, '2025-08-22 21:29:33', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for warehousing_entry_details
@@ -584,10 +585,10 @@ CREATE TABLE `warehousing_entry_details`  (
 -- ----------------------------
 -- Records of warehousing_entry_details
 -- ----------------------------
-INSERT INTO `warehousing_entry_details` VALUES (1, 1, 124124125, 2, 666, 3, '2025-08-26 00:00:00', '2025-08-19 00:56:20', 3, '2025-08-18 00:00:00', 3, NULL, '2025-08-19 00:56:30', NULL, '2025-08-20 23:04:48', NULL, NULL);
-INSERT INTO `warehousing_entry_details` VALUES (2, 5, 99999, 7, 99, 2, '2025-08-29 00:00:00', '2025-08-29 00:00:00', 90, '2025-08-24 00:00:00', 2, NULL, '2025-08-19 08:57:07', NULL, '2025-08-20 16:32:36', NULL, NULL);
-INSERT INTO `warehousing_entry_details` VALUES (3, 7, 333, 3, 299, 2, '2025-08-04 00:00:00', '2025-08-20 00:00:00', 1, '2025-08-21 00:00:00', 3, NULL, '2025-08-20 16:32:24', NULL, '2025-08-20 23:04:52', NULL, NULL);
-INSERT INTO `warehousing_entry_details` VALUES (4, 8, 33, 7, 56, 3, '2025-07-29 00:00:00', '2025-08-13 00:00:00', 1, '2025-08-18 00:00:00', 4, NULL, '2025-08-20 22:48:51', NULL, '2025-08-20 22:49:16', NULL, NULL);
+INSERT INTO `warehousing_entry_details` VALUES (1, 1, 124124125, 2, 666, 1, '2025-08-26 00:00:00', '2025-08-19 00:56:20', 3, '2025-08-18 00:00:00', 1, NULL, '2025-08-19 00:56:30', NULL, '2025-08-23 00:33:49', NULL, NULL);
+INSERT INTO `warehousing_entry_details` VALUES (2, 5, 99999, 7, 99, 2, '2025-08-29 00:00:00', '2025-08-29 00:00:00', 90, '2025-08-24 00:00:00', 2, NULL, '2025-08-19 08:57:07', NULL, '2025-08-23 00:34:45', NULL, NULL);
+INSERT INTO `warehousing_entry_details` VALUES (3, 7, 333, 3, 299, 3, '2025-08-04 00:00:00', '2025-08-20 00:00:00', 1, '2025-08-21 00:00:00', 4, NULL, '2025-08-20 16:32:24', NULL, '2025-08-23 00:00:06', NULL, NULL);
+INSERT INTO `warehousing_entry_details` VALUES (4, 8, 33, 7, 56, 4, '2025-07-29 00:00:00', '2025-08-13 00:00:00', 1, '2025-08-18 00:00:00', 5, NULL, '2025-08-20 22:48:51', NULL, '2025-08-23 00:33:25', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for warehousing_entry_details_sort
@@ -609,11 +610,12 @@ CREATE TABLE `warehousing_entry_details_sort`  (
   `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
   `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '入库明细分拣表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '入库明细分拣表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of warehousing_entry_details_sort
 -- ----------------------------
+INSERT INTO `warehousing_entry_details_sort` VALUES (4, 100, 4, 8, 1, 1, 1, 1, NULL, '2025-08-22 22:46:43', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for warehousing_entry_up
@@ -621,12 +623,12 @@ CREATE TABLE `warehousing_entry_details_sort`  (
 DROP TABLE IF EXISTS `warehousing_entry_up`;
 CREATE TABLE `warehousing_entry_up`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `sku_id` bigint NOT NULL COMMENT '规格ID',
-  `warehouse_id` int NOT NULL COMMENT '上架仓库ID',
-  `warehouse_area_id` int NOT NULL COMMENT '上架库区ID',
-  `warehouse_area_loca_id` int NOT NULL COMMENT '上架库位ID',
-  `count` int NOT NULL COMMENT '上架数量',
-  `details_sort_id` bigint NOT NULL COMMENT '分拣明细ID',
+  `sku_id` bigint NULL DEFAULT NULL COMMENT '规格ID',
+  `warehouse_id` int NULL DEFAULT NULL COMMENT '上架仓库ID',
+  `warehouse_area_id` int NULL DEFAULT NULL COMMENT '上架库区ID',
+  `warehouse_area_loca_id` int NULL DEFAULT NULL COMMENT '上架库位ID',
+  `count` int NULL DEFAULT NULL COMMENT '上架数量',
+  `details_sort_id` bigint NULL DEFAULT NULL COMMENT '分拣明细ID',
   `status` int NOT NULL DEFAULT 1 COMMENT '上架状态(1 未上架，2 已上架)',
   `saas_id` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'SaaS标识',
   `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -635,10 +637,11 @@ CREATE TABLE `warehousing_entry_up`  (
   `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
   `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '入库上架表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '入库上架表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of warehousing_entry_up
 -- ----------------------------
+INSERT INTO `warehousing_entry_up` VALUES (1, 7, 1, 1, 1, 1, 3, 2, NULL, '2025-08-22 22:00:58', NULL, NULL, NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

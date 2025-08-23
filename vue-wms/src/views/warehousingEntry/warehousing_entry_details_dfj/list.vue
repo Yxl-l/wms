@@ -136,6 +136,7 @@ const handleRefresh = () => {
   }
   page.value = 1;
   getPage();
+  getWarehousingEntryData()
 };
 
 // 处理编辑事件
@@ -230,7 +231,7 @@ onMounted(() => {
           {{ warehousingEntryMap.get(scope.row.warehousingEntryId) || scope.row.warehousingEntryId }}
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="ᅟᅠ   状态" width="150">
+      <el-table-column prop="status" label="ᅟ 状态" width="180">
         <template #default="scope">
           <el-tag :type="statusTypeMap[scope.row.status] || ''" size="large">
             {{ statusMap[scope.row.status] || scope.row.status }}
@@ -297,5 +298,10 @@ onMounted(() => {
 <style scoped>
 div {
   opacity: 0.9;
+}
+.el-tag {
+  font-size: 14px !important;
+  height: auto !important;
+  padding: 8px 12px !important;
 }
 </style>

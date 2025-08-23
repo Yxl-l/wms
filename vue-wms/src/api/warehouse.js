@@ -23,6 +23,8 @@ export const updateAreaApi = (data)=>request.put(`/tb_warehouse_area`,data)
 export const deleteAreaApi = (id)=>request.delete(`/tb_warehouse_area/${id}`)
 //根据ID查询库区详情
 export const getAreaDetailApi = (id)=>request.get(`/tb_warehouse_area/${id}`)
+//获取全部库区
+export const getAreaDetailAllApi = ()=>request.get(`/tb_warehouse_area/all`)
 //分页查询库位
 export const getPageAreaLocaApi = (page,pageSize,areaId,locaCode)=>request.get(`/tb_warehouse_area_loca?page=${page}&pageSize=${pageSize}&areaId=${areaId}&locaCode=${locaCode}`)
 //添加库位

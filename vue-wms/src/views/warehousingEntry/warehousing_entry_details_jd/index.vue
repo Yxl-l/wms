@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 
-import ListWarehousingEntryDetails from './list.vue'
+import ListWarehousingEntryDetails from './list_addUp.vue'
 
 const listRef = ref()
 

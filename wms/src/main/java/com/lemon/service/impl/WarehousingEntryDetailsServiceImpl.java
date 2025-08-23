@@ -31,7 +31,8 @@ public class WarehousingEntryDetailsServiceImpl extends ServiceImpl<WarehousingE
                 .eq(ObjectUtil.isNotEmpty(warehousingEntryDetailsDto.getUnloadEmpId()), WarehousingEntryDetails::getUnloadEmpId, warehousingEntryDetailsDto.getUnloadEmpId())
                 //状态
                 .and(ObjectUtil.isNotEmpty(warehousingEntryDetailsDto.getStatus()), wrapper -> {
-                    if (warehousingEntryDetailsDto.getStatus() == 4) {//如果状态为4，则查询4和5
+                    if (warehousingEntryDetailsDto.getStatus() == 4) {
+                        //如果状态为4，则查询4和5,让分拣货物进度组件只能获取到状态为45的数据
                         wrapper.in(WarehousingEntryDetails::getStatus, 4, 5);
                     } else {
                         wrapper.eq(WarehousingEntryDetails::getStatus, warehousingEntryDetailsDto.getStatus());

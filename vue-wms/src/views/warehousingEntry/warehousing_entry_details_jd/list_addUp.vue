@@ -7,6 +7,7 @@ import { getAllApi as getSupplierAllApi } from "@/api/supplier";
 import { getAllApi as getWarehousingEntryAllApi } from "@/api/warehousingEntry";
 import { getSkuAllApi } from "@/api/goods";
 import { updateStatusApi } from "@/api/warehousingEntryDetails";
+import { addApi as addUpApi } from "@/api/warehousingEntryUp";
 
 const queryRef = ref();
 const editRef = ref() // 修改组件的引用
@@ -31,6 +32,14 @@ const statusTypeMap = {
   4: 'primary',
   5: 'success'
 }
+
+//新增上架表单
+const addShelfDialogVisible = ref({
+  skuId:'',
+  status:'1',
+  detailsSortId:'',
+ 
+})
 
 // 分页相关
 const warehousingEntryDetailsList = ref([])
@@ -136,6 +145,7 @@ const handleRefresh = () => {
   }
   page.value = 1;
   getPage();
+  getWarehousingEntryData();
 };
 
 // 处理编辑事件
@@ -158,6 +168,26 @@ const handleStatusEdit =async (row) => {
       ElMessage.error('操作失败')
     }
 }
+// 处理状态修改事件(点事件改状态为6)
+const handleStatusEditSJ =async (row) => {
+    addShelfDialogVisible.value.skuId=row.skuId
+    addShelfDialogVisible.value.detailsSortId=row.id
+     addUpApi(addShelfDialogVisible.value)
+     console.log(addShelfDialogVisible.value)
+   let res = await updateStatusApi({
+      id: row.id,
+      status: 6
+    })
+    if (res.code === 1) {
+      ElMessage.success('分拣任务下发成功')
+      handleRefresh() // 修改成功后刷新列表
+    } else {
+      ElMessage.error('操作失败')
+    }
+  
+
+}
+
 
 
 
@@ -215,7 +245,7 @@ onMounted(() => {
       <el-table-column label="操作" width="200" fixed="right">
         <template #default="scope">
            <el-button type="warning" size="mini" @click="handleStatusEdit(scope.row)">分拣完成</el-button>
-           <el-button type="primary" size="mini" @click="handleStatusEdit(scope.row)">上架</el-button>
+           <el-button type="primary" size="mini" @click="handleStatusEditSJ(scope.row)">预上架</el-button>
       
         </template>
       </el-table-column>
@@ -241,5 +271,10 @@ onMounted(() => {
 <style scoped>
 div {
   opacity: 0.9;
+}
+.el-tag {
+  font-size: 14px !important;
+  height: auto !important;
+  padding: 8px 12px !important;
 }
 </style>

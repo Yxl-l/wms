@@ -1,31 +1,25 @@
 <script setup>
-// import { ref } from 'vue'
-// import addWarehouse from './add.vue'
-// import listWarehouse from './list.vue'
+import { ref } from 'vue'
+import ListWarehousingEntryUp from './list.vue'
 
-// const listRef = ref()
+const listRef = ref()
 
 // 刷新列表的方法
-// const handleRefresh = () => {
-//   if (listRef.value) {
-//     listRef.value.handleRefresh()
-//   }
-// }
+const handleRefresh = () => {
+  if (listRef.value) {
+    listRef.value.handleRefresh()
+  }
+}
 </script>
 
 <template>
  <div>
-    库位管理 
+  入库上架表
     
-    <!-- 添加 -->
-    <!-- <div class="add"> 
-      <addWarehouse @refresh="handleRefresh" /> 
-    </div> -->
-
     <!-- 列表 -->
-    <!-- <div class="list"> 
-      <listWarehouse ref="listRef" /> 
-    </div> -->
+    <div class="list"> 
+      <ListWarehousingEntryUp ref="listRef" /> 
+    </div>
  </div>
 </template>
 

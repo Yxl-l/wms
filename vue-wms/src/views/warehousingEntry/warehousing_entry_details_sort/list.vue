@@ -223,4 +223,9 @@ onMounted(() => {
 div {
   opacity: 0.9;
 }
+.el-tag {
+  font-size: 14px !important;
+  height: auto !important;
+  padding: 8px 12px !important;
+}
 </style>

@@ -79,4 +79,12 @@ public class TbWarehouseAreaController {
         log.info("根据id查询库区");
         return Result.success(tbWarehouseAreaMapper.selectById(id));
     }
+    /**
+     * 查询所有库区
+     */
+    @GetMapping("/all")
+    public Result getAll() {
+        log.info("查询所有库区");
+        return Result.success(tbWarehouseAreaMapper.selectList(null));
+    }
 }

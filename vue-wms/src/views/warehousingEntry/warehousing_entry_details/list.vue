@@ -21,7 +21,8 @@ const statusMap = {
   2: '已到货',
   3: '已卸货',
   4: '分拣中',
-  5: '分拣完成可上架'
+  5: '分拣完成',
+  6:'已上架'
 }
 
 // 状态类型映射（用于el-tag的type属性）
@@ -30,7 +31,8 @@ const statusTypeMap = {
   2: 'warning',
   3: 'success',
   4: 'primary',
-  5: 'success'
+  5: 'success',
+  6: 'danger'
 }
 
 // 分页相关
@@ -138,6 +140,7 @@ const handleRefresh = () => {
   }
   page.value = 1;
   getPage();
+  getWarehousingEntryData()
 };
 
 // 处理编辑事件
@@ -265,7 +268,7 @@ onMounted(() => {
           {{ warehousingEntryMap.get(scope.row.warehousingEntryId) || scope.row.warehousingEntryId }}
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态" width="120">
+      <el-table-column prop="status" label="ᅟᅠ   状态" width="180">
         <template #default="scope">
           <el-tag :type="statusTypeMap[scope.row.status] || ''" size="large">
             {{ statusMap[scope.row.status] || scope.row.status }}
@@ -278,7 +281,7 @@ onMounted(() => {
       <el-table-column prop="unloadTime" label="卸货时间" width="180"/>
       
       <el-table-column prop="createTime" label="创建时间" width="180"/>
-      <el-table-column label="ᅟᅠ   ᅟᅠ   操作" width="250" fixed="right">
+      <el-table-column label="ᅟᅠ   ᅟ  操作" width="250" fixed="right">
         <template #default="scope">
            <el-button type="warning" size="mini" @click="openStatusDialog(scope.row)">修改状态</el-button>
           <el-button type="primary" size="small" @click="handleEdit(scope.row)">编辑</el-button>
@@ -335,5 +338,10 @@ onMounted(() => {
 <style scoped>
 div {
   opacity: 0.9;
+}
+.el-tag {
+  font-size: 14px !important;
+  height: auto !important;
+  padding: 8px 12px !important;
 }
 </style>
