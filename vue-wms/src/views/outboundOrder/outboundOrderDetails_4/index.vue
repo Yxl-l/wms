@@ -14,7 +14,7 @@ const handleRefresh = () => {
 
 <template>
  <div>
-  预发货
+  待检货
     
     <!-- 列表 -->
     <div class="list"> 

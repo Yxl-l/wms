@@ -25,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GoodsController {
 private final GoodsService goodsService;
+private final GoodsMapper goodsMapper;
 
     /**
      * 添加商品

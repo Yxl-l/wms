@@ -11,7 +11,7 @@
  Target Server Version : 80034 (8.0.34)
  File Encoding         : 65001
 
- Date: 23/08/2025 20:56:18
+ Date: 26/08/2025 22:55:43
 */
 
 SET NAMES utf8mb4;
@@ -143,6 +143,130 @@ CREATE TABLE `lock_table`  (
 
 -- ----------------------------
 -- Records of lock_table
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for outbound_order
+-- ----------------------------
+DROP TABLE IF EXISTS `outbound_order`;
+CREATE TABLE `outbound_order`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `customer_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '客户name',
+  `invoice_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '发货单号',
+  `status` int NOT NULL DEFAULT 1 COMMENT '状态(1 预发货、2确认发货、3 拣货中、4 拣货完成 、5 待打包、6 待称重、7 待发货、8 已发货、9 已签收)',
+  `total_count` int NULL DEFAULT 0 COMMENT '总数量',
+  `total_weight` int NULL DEFAULT NULL COMMENT '总重量',
+  `total_volume` int NULL DEFAULT NULL COMMENT '总体积',
+  `emp_id` int NULL DEFAULT NULL COMMENT '操作员工ID',
+  `price` int NULL DEFAULT NULL COMMENT '承运费用',
+  `logistics_company_id` bigint NULL DEFAULT NULL COMMENT '物流公司ID',
+  `logistics_number` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '物流单号',
+  `saas_id` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'SaaS标识',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `create_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人账号',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
+  `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of outbound_order
+-- ----------------------------
+INSERT INTO `outbound_order` VALUES (10, '杨小龙', '1c1fb282-5713-4980-b02c-31b6bd602dee', 2, 30, 800, 800, 1, NULL, NULL, NULL, NULL, '2025-08-26 15:07:58', '蔡徐坤', '2025-08-26 22:50:49', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (12, '555', '0ae66420-3f1a-4a41-9639-5466f5448d01', 8, 30, 180, 1500000, 1, NULL, NULL, NULL, NULL, '2025-08-26 15:36:48', '蔡徐坤', NULL, NULL, NULL);
+INSERT INTO `outbound_order` VALUES (14, '飞科', '17a9ba44-7db0-4ab9-984d-249ef8e38c94', 1, 27, 126, 600324, 1, NULL, NULL, NULL, NULL, '2025-08-26 16:09:06', '蔡徐坤', NULL, NULL, NULL);
+INSERT INTO `outbound_order` VALUES (15, '胡桃', 'ae85ccf3-fe89-4c6c-8c1f-98d4da2430b6', 1, 12, 292, 370000, 1, NULL, NULL, NULL, NULL, '2025-08-26 22:49:36', '蔡徐坤', NULL, NULL, NULL);
+INSERT INTO `outbound_order` VALUES (16, '芙芙', 'f2ec6ba4-7d91-4088-a21e-21250dce9666', 1, 7, 56, 448, 1, NULL, NULL, NULL, NULL, '2025-08-26 22:51:13', '蔡徐坤', NULL, NULL, NULL);
+INSERT INTO `outbound_order` VALUES (17, '山里灵活', '9bf03798-cb41-4e5c-9e42-9f1f05ad3301', 2, 8, 48, 320000, 1, NULL, NULL, NULL, NULL, '2025-08-26 22:51:53', '蔡徐坤', '2025-08-26 22:53:49', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (18, '刻晴', '31361610-721f-477d-8bcf-48d7221c9d00', 1, 1, 6, 40000, 1, NULL, NULL, NULL, NULL, '2025-08-26 22:52:28', '蔡徐坤', NULL, NULL, NULL);
+
+-- ----------------------------
+-- Table structure for outbound_order_details
+-- ----------------------------
+DROP TABLE IF EXISTS `outbound_order_details`;
+CREATE TABLE `outbound_order_details`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `sku_id` bigint NOT NULL COMMENT '规格ID',
+  `max_count` int NULL DEFAULT NULL COMMENT '最大数量',
+  `out_count` int NULL DEFAULT NULL COMMENT '出库数量',
+  `target_warehouse_id` int NULL DEFAULT NULL COMMENT '仓库ID',
+  `target_warehouse_area_id` int NULL DEFAULT NULL COMMENT '库位ID',
+  `target_warehouse_area_loca_id` int NULL DEFAULT NULL COMMENT '库位ID',
+  `outbound_order_id` bigint NULL DEFAULT NULL COMMENT '出库单ID',
+  `pick_status` int NOT NULL DEFAULT 1 COMMENT '拣货状态(1 未拣货、2 已拣货)',
+  `pick_emp_id` int NULL DEFAULT NULL COMMENT '拣货复核员工ID',
+  `pick_time` datetime NULL DEFAULT NULL COMMENT '拣货复核时间',
+  `saas_id` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'SaaS标识',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `create_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人账号',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
+  `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单明细' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of outbound_order_details
+-- ----------------------------
+INSERT INTO `outbound_order_details` VALUES (3, 1, 30, 30, 2, 3, 10, 10, 1, NULL, NULL, NULL, '2025-08-26 15:07:58', '蔡徐坤', '2025-08-26 22:50:49', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (5, 4, 30, 30, NULL, NULL, NULL, 12, 1, NULL, NULL, NULL, '2025-08-26 15:36:48', '蔡徐坤', NULL, NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (7, 1, 15, 15, NULL, NULL, NULL, 14, 1, NULL, NULL, NULL, '2025-08-26 16:09:06', NULL, NULL, NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (8, 5, 12, 12, NULL, NULL, NULL, 14, 1, NULL, NULL, NULL, '2025-08-26 16:09:06', NULL, NULL, NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (9, 7, 5, 5, NULL, NULL, NULL, 15, 1, NULL, NULL, NULL, '2025-08-26 22:49:36', NULL, NULL, NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (10, 3, 7, 7, NULL, NULL, NULL, 15, 1, NULL, NULL, NULL, '2025-08-26 22:49:36', NULL, NULL, NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (11, 8, 7, 7, NULL, NULL, NULL, 16, 1, NULL, NULL, NULL, '2025-08-26 22:51:13', NULL, NULL, NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (12, 2, 8, 8, 2, 3, 10, 17, 1, NULL, NULL, NULL, '2025-08-26 22:51:53', NULL, '2025-08-26 22:53:49', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (13, 1, 1, 1, NULL, NULL, NULL, 18, 1, NULL, NULL, NULL, '2025-08-26 22:52:28', NULL, NULL, NULL, NULL);
+
+-- ----------------------------
+-- Table structure for outbound_order_package
+-- ----------------------------
+DROP TABLE IF EXISTS `outbound_order_package`;
+CREATE TABLE `outbound_order_package`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `package_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '打包单号',
+  `outbound_order_detail_id` bigint NOT NULL COMMENT '出库单明细ID',
+  `sku_id` bigint NOT NULL COMMENT '规格ID',
+  `package_count` int NOT NULL COMMENT '打包数量',
+  `package_emp_id` int NULL DEFAULT NULL COMMENT '打包员工ID',
+  `package_time` datetime NULL DEFAULT NULL COMMENT '打包时间',
+  `saas_id` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'SaaS标识',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `create_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人账号',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
+  `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单打包表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of outbound_order_package
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for outbound_order_weights
+-- ----------------------------
+DROP TABLE IF EXISTS `outbound_order_weights`;
+CREATE TABLE `outbound_order_weights`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `weights_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '称重单号',
+  `outbound_order_detail_id` bigint NOT NULL COMMENT '出库单明细ID',
+  `weights_emp_id` int NOT NULL COMMENT '称重员工ID',
+  `weights_time` datetime NOT NULL COMMENT '称重时间',
+  `weight_val` int NOT NULL COMMENT '称重质量',
+  `weights_unit` int NOT NULL COMMENT '称重单位',
+  `saas_id` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'SaaS标识',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `create_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人账号',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
+  `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单称重记录表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of outbound_order_weights
 -- ----------------------------
 
 -- ----------------------------
@@ -434,7 +558,7 @@ CREATE TABLE `tb_warehouse_area`  (
   `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
   `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '仓库库区表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '仓库库区表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tb_warehouse_area
@@ -442,6 +566,31 @@ CREATE TABLE `tb_warehouse_area`  (
 INSERT INTO `tb_warehouse_area` VALUES (1, '一号库区', 1, 'RECEIVING_AREA', NULL, '2025-08-15 00:47:25', NULL, NULL, NULL, NULL);
 INSERT INTO `tb_warehouse_area` VALUES (2, '二号', 1, 'PICKING_AREA', NULL, '2025-08-15 00:49:08', NULL, NULL, NULL, NULL);
 INSERT INTO `tb_warehouse_area` VALUES (3, '京✌三号', 2, 'PICKING_AREA', NULL, '2025-08-15 01:22:30', NULL, NULL, NULL, NULL);
+INSERT INTO `tb_warehouse_area` VALUES (4, '收货区-1', 1, 'RECEIVING_AREA', 'saas_001', '2023-05-10 08:30:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (5, '存储区-1', 1, 'STORAGE_AREA', 'saas_001', '2023-05-10 08:30:00', 'admin', '2023-06-15 14:20:00', 'user01', 1);
+INSERT INTO `tb_warehouse_area` VALUES (6, '拣货区-1', 1, 'PICKING_AREA', 'saas_001', '2023-05-10 08:30:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (7, '打包区-1', 1, 'PACKING_AREA', 'saas_001', '2023-05-10 08:30:00', 'admin', '2023-07-20 10:30:00', 'user02', 1);
+INSERT INTO `tb_warehouse_area` VALUES (8, '发货区-1', 1, 'SHIPPING_AREA', 'saas_001', '2023-05-10 08:30:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (9, '收货区-2', 2, 'RECEIVING_AREA', 'saas_002', '2023-04-12 09:15:00', 'sysadmin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (10, '存储区-2', 2, 'STORAGE_AREA', 'saas_002', '2023-04-12 09:15:00', 'sysadmin', '2023-08-10 16:45:00', 'user03', 1);
+INSERT INTO `tb_warehouse_area` VALUES (11, '拣货区-2', 2, 'PICKING_AREA', 'saas_002', '2023-04-12 09:15:00', 'sysadmin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (12, '打包区-2', 2, 'PACKING_AREA', 'saas_002', '2023-04-12 09:15:00', 'sysadmin', '2023-09-05 09:10:00', 'user04', 1);
+INSERT INTO `tb_warehouse_area` VALUES (13, '发货区-2', 2, 'SHIPPING_AREA', 'saas_002', '2023-04-12 09:15:00', 'sysadmin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (14, '收货区-3', 3, 'RECEIVING_AREA', 'saas_003', '2023-03-20 13:45:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (15, '存储区-3', 3, 'STORAGE_AREA', 'saas_003', '2023-03-20 13:45:00', 'admin', '2023-10-12 15:30:00', 'user05', 1);
+INSERT INTO `tb_warehouse_area` VALUES (16, '拣货区-3', 3, 'PICKING_AREA', 'saas_003', '2023-03-20 13:45:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (17, '打包区-3', 3, 'PACKING_AREA', 'saas_003', '2023-03-20 13:45:00', 'admin', '2023-11-08 11:45:00', 'user06', 1);
+INSERT INTO `tb_warehouse_area` VALUES (18, '发货区-3', 3, 'SHIPPING_AREA', 'saas_003', '2023-03-20 13:45:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (19, '收货区-4', 4, 'RECEIVING_AREA', 'saas_004', '2023-06-08 11:20:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (20, '存储区-4', 4, 'STORAGE_AREA', 'saas_004', '2023-06-08 11:20:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (21, '拣货区-4', 4, 'PICKING_AREA', 'saas_004', '2023-06-08 11:20:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (22, '打包区-4', 4, 'PACKING_AREA', 'saas_004', '2023-06-08 11:20:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (23, '发货区-4', 4, 'SHIPPING_AREA', 'saas_004', '2023-06-08 11:20:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (24, '收货区-5', 5, 'RECEIVING_AREA', 'saas_005', '2023-02-18 10:00:00', 'sysadmin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (25, '存储区-5', 5, 'STORAGE_AREA', 'saas_005', '2023-02-18 10:00:00', 'sysadmin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (26, '拣货区-5', 5, 'PICKING_AREA', 'saas_005', '2023-02-18 10:00:00', 'sysadmin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (27, '打包区-5', 5, 'PACKING_AREA', 'saas_005', '2023-02-18 10:00:00', 'sysadmin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area` VALUES (28, '发货区-5', 5, 'SHIPPING_AREA', 'saas_005', '2023-02-18 10:00:00', 'sysadmin', NULL, NULL, 1);
 
 -- ----------------------------
 -- Table structure for tb_warehouse_area_loca
@@ -466,13 +615,29 @@ CREATE TABLE `tb_warehouse_area_loca`  (
   `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
   `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '库位表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '库位表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tb_warehouse_area_loca
 -- ----------------------------
 INSERT INTO `tb_warehouse_area_loca` VALUES (1, 1, '1', 12, 12, 12, 1222, 1111, '3', '123', '2', NULL, '2025-08-18 21:30:05', NULL, NULL, NULL, NULL);
 INSERT INTO `tb_warehouse_area_loca` VALUES (2, 2, '3', 3, 3, 3, 33, 33, '3', '3', '3', NULL, '2025-08-18 21:30:44', NULL, NULL, NULL, NULL);
+INSERT INTO `tb_warehouse_area_loca` VALUES (3, 1, 'A-01-01-01', 200, 100, 150, 3000000, 500, 'A', '01', '01', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (4, 1, 'A-01-01-02', 200, 100, 150, 3000000, 500, 'A', '01', '02', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (5, 1, 'A-01-02-01', 200, 100, 150, 3000000, 500, 'A', '01', '01', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (6, 1, 'A-02-01-01', 200, 100, 150, 3000000, 500, 'A', '02', '01', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (7, 2, 'B-01-01-01', 180, 90, 120, 1944000, 400, 'B', '01', '01', 'saas_001', '2023-05-10 09:00:00', 'admin', '2023-06-15 14:30:00', 'user01', 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (8, 2, 'B-01-01-02', 180, 90, 120, 1944000, 400, 'B', '01', '02', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (9, 2, 'B-01-02-01', 180, 90, 120, 1944000, 400, 'B', '01', '01', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (10, 3, 'C-01-01-01', 150, 80, 100, 1200000, 300, 'C', '01', '01', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (11, 3, 'C-01-01-02', 150, 80, 100, 1200000, 300, 'C', '01', '02', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (12, 3, 'C-01-02-01', 150, 80, 100, 1200000, 300, 'C', '01', '01', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (13, 4, 'D-01-01-01', 120, 60, 80, 576000, 200, 'D', '01', '01', 'saas_001', '2023-05-10 09:00:00', 'admin', '2023-07-20 11:00:00', 'user02', 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (14, 4, 'D-01-01-02', 120, 60, 80, 576000, 200, 'D', '01', '02', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (15, 4, 'D-01-02-01', 120, 60, 80, 576000, 200, 'D', '01', '01', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (16, 5, 'E-01-01-01', 100, 50, 60, 300000, 100, 'E', '01', '01', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (17, 5, 'E-01-01-02', 100, 50, 60, 300000, 100, 'E', '01', '02', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
+INSERT INTO `tb_warehouse_area_loca` VALUES (18, 5, 'E-01-02-01', 100, 50, 60, 300000, 100, 'E', '01', '01', 'saas_001', '2023-05-10 09:00:00', 'admin', NULL, NULL, 1);
 
 -- ----------------------------
 -- Table structure for user
@@ -552,7 +717,7 @@ CREATE TABLE `warehousing_entry`  (
 -- ----------------------------
 -- Records of warehousing_entry
 -- ----------------------------
-INSERT INTO `warehousing_entry` VALUES (1, 1, '1111', 10000, '2025-08-12 00:00:00', 2, 0, 0, 1, 0, NULL, '2025-08-18 23:08:26', NULL, '2025-08-23 00:34:09', NULL, NULL);
+INSERT INTO `warehousing_entry` VALUES (1, 1, '1111', 10000, '2025-08-12 00:00:00', 2, 0, 0, 1, 0, NULL, '2025-08-18 23:08:26', NULL, '2025-08-24 08:43:03', NULL, NULL);
 INSERT INTO `warehousing_entry` VALUES (2, 1, '222', 6666, '2025-08-04 00:00:00', 3, 9, 0, 3, 9, NULL, '2025-08-18 23:17:24', NULL, '2025-08-23 00:34:41', NULL, NULL);
 INSERT INTO `warehousing_entry` VALUES (3, 1, '3', 3, '2025-08-12 00:00:00', 2, 3, 3, 4, 3, NULL, '2025-08-19 00:45:57', NULL, '2025-08-22 22:04:25', NULL, NULL);
 INSERT INTO `warehousing_entry` VALUES (4, 1, '666', 53, '2025-08-08 00:00:00', 12, 0, 0, 4, 0, NULL, '2025-08-22 21:29:33', NULL, NULL, NULL, NULL);
@@ -585,7 +750,7 @@ CREATE TABLE `warehousing_entry_details`  (
 -- ----------------------------
 -- Records of warehousing_entry_details
 -- ----------------------------
-INSERT INTO `warehousing_entry_details` VALUES (1, 1, 124124125, 2, 666, 1, '2025-08-26 00:00:00', '2025-08-19 00:56:20', 3, '2025-08-18 00:00:00', 1, NULL, '2025-08-19 00:56:30', NULL, '2025-08-23 00:33:49', NULL, NULL);
+INSERT INTO `warehousing_entry_details` VALUES (1, 1, 124124125, 2, 666, 1, '2025-08-26 00:00:00', '2025-08-19 00:56:20', 3, '2025-08-18 00:00:00', 1, NULL, '2025-08-19 00:56:30', NULL, '2025-08-24 08:42:54', NULL, NULL);
 INSERT INTO `warehousing_entry_details` VALUES (2, 5, 99999, 7, 99, 2, '2025-08-29 00:00:00', '2025-08-29 00:00:00', 90, '2025-08-24 00:00:00', 2, NULL, '2025-08-19 08:57:07', NULL, '2025-08-23 00:34:45', NULL, NULL);
 INSERT INTO `warehousing_entry_details` VALUES (3, 7, 333, 3, 299, 3, '2025-08-04 00:00:00', '2025-08-20 00:00:00', 1, '2025-08-21 00:00:00', 4, NULL, '2025-08-20 16:32:24', NULL, '2025-08-23 00:00:06', NULL, NULL);
 INSERT INTO `warehousing_entry_details` VALUES (4, 8, 33, 7, 56, 4, '2025-07-29 00:00:00', '2025-08-13 00:00:00', 1, '2025-08-18 00:00:00', 5, NULL, '2025-08-20 22:48:51', NULL, '2025-08-23 00:33:25', NULL, NULL);

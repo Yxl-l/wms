@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.mapper.OutboundOrderWeightsMapper">
+  <resultMap id="BaseResultMap" type="com.lemon.domain.OutboundOrderWeights">
+    <!--@mbg.generated-->
+    <!--@Table outbound_order_weights-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="weights_code" jdbcType="VARCHAR" property="weightsCode" />
+    <result column="outbound_order_detail_id" jdbcType="BIGINT" property="outboundOrderDetailId" />
+    <result column="weights_emp_id" jdbcType="INTEGER" property="weightsEmpId" />
+    <result column="weights_time" jdbcType="TIMESTAMP" property="weightsTime" />
+    <result column="weight_val" jdbcType="INTEGER" property="weightVal" />
+    <result column="weights_unit" jdbcType="INTEGER" property="weightsUnit" />
+    <result column="saas_id" jdbcType="VARCHAR" property="saasId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, weights_code, outbound_order_detail_id, weights_emp_id, weights_time, weight_val, 
+    weights_unit, saas_id, create_time, create_by, update_time, update_by, is_del
+  </sql>
+</mapper>

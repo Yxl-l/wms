@@ -90,6 +90,10 @@ const exit = () => {
               <el-icon><Collection /></el-icon>
               <span>收货管理</span>
             </el-menu-item>
+              <el-menu-item index="/outboundOrder">
+              <el-icon><Collection /></el-icon>
+              <span>发货管理</span>
+            </el-menu-item>
             <el-menu-item index="/chat">
               <el-icon><Collection /></el-icon>
               <span>聊天室</span>
@@ -141,7 +145,7 @@ const exit = () => {
   background-size: cover;
 }
 .ax{
-   background: url("/public/芭芭拉.png") no-repeat center center;
+   background: url("/public/双峰.png") no-repeat center center;
    background-size: cover;
 }
 .tm{

@@ -11,6 +11,7 @@ import Chat from '@/views/chat/index.vue'
 import Warehouse from '@/views/warehouse/index.vue'
 import Logistics from '@/views/logistics/index.vue'
 import WarehousingEntry from '@/views/warehousingEntry/index.vue'
+import OutboundOrder from '@/views/outboundOrder/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,7 @@ const router = createRouter({
       { path: 'warehouse', name:'warehouse', component: Warehouse },
       { path: 'logistics', name:'logistics', component: Logistics },
       { path: 'warehousingEntry', name:'warehousingEntry', component: WarehousingEntry },
+      { path: 'outboundOrder', name:'outboundOrder', component: OutboundOrder },
      
     ]},
     { path: '/login', component: Login }
