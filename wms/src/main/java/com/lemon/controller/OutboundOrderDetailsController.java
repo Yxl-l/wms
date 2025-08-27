@@ -1,7 +1,9 @@
 package com.lemon.controller;
 import com.lemon.domain.OutboundOrderDetails;
+import com.lemon.domain.dto.OutboundOrderPickingDto;
 import com.lemon.service.impl.OutboundOrderDetailsServiceImpl;
 import com.lemon.domain.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +12,11 @@ import java.util.Date;
 
 /**
  * 出库单明细(outbound_order_details)表控制层
+ * 待检货-已拣货组件
  *
  * @author xxxxx
  */
+@Slf4j
 @RestController
 @RequestMapping("/outbound_order_details")
 public class OutboundOrderDetailsController {
@@ -22,6 +26,22 @@ public class OutboundOrderDetailsController {
     @Autowired
     private OutboundOrderDetailsServiceImpl outboundOrderDetailsServiceImpl;
 
+
+    /**
+     * 根据id查询出库单明细
+     */
+    @GetMapping("/{id}")
+    public Result getPickingById(@PathVariable Long id) {
+        return Result.success(outboundOrderDetailsServiceImpl.getPickingById(id));
+    }
+    /**
+     * 分页查询待检货-已拣货组件的数据
+     */
+    @GetMapping
+    public Result getPageAll(OutboundOrderPickingDto outboundOrderPickingDto) {
+        log.info("分页查询待检货-已拣货组件的数据");
+        return Result.success(outboundOrderDetailsServiceImpl.getPageAll(outboundOrderPickingDto));
+    }
     /**
      * 新增出库单明细
      */
@@ -48,13 +68,7 @@ public class OutboundOrderDetailsController {
         return outboundOrderDetailsServiceImpl.removeById(id) ? Result.success("删除成功") : Result.error("删除失败");
     }
 
-    /**
-     * 根据id查询出库单明细
-     */
-    @GetMapping("/{id}")
-    public Result getById(@PathVariable Long id) {
-        return Result.success(outboundOrderDetailsServiceImpl.getById(id));
-    }
+
 
     /**
      * 查询全部出库单明细

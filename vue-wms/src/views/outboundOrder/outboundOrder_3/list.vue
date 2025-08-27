@@ -16,15 +16,9 @@ const totalSize = ref(0)
 
 // 状态映射和样式
 const statusConfig = {
-  1: { text: '预发货', type: 'info' },
+  
   2: { text: '确认发货', type: 'primary' },
-  3: { text: '拣货中', type: 'warning' },
-  4: { text: '拣货完成', type: 'success' },
-  5: { text: '待打包', type: 'info' },
-  6: { text: '待称重', type: 'info' },
-  7: { text: '待发货', type: 'warning' },
-  8: { text: '已发货', type: 'success' },
-  9: { text: '已签收', type: 'success' }
+  
 }
 
 // 分页查询数据

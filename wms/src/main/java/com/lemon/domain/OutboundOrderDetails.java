@@ -80,6 +80,16 @@ public class OutboundOrderDetails {
      */
     @TableField(value = "pick_time")
     private Date pickTime;
+    /**
+     * 重量
+     */
+    @TableField(value = "weight")
+    private Integer weight;
+    /**
+     * 体积
+     */
+    @TableField(value = "volume")
+    private Integer volume;
 
     /**
      * SaaS标识

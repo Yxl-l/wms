@@ -27,4 +27,47 @@
     outbound_order_id, pick_status, pick_emp_id, pick_time, saas_id, create_time, create_by, 
     update_time, update_by, is_del
   </sql>
+
+
+    <select id="getPageAll" resultType="com.lemon.domain.vo.OutboundOrderPickingVo">
+      SELECT DISTINCT
+      sku.id,
+      sku.title,
+      sku.spu_id AS spuId,
+      sku.code,
+      od.id AS odId,
+      od.max_count AS maxCount,
+      od.out_count AS outCount,
+      (od.max_count - od.out_count) AS pickingCount,
+      od.weight,
+      od.outbound_order_id AS outboundOrderId, -- 订单ID
+      od.volume,
+      od.create_time AS createTime,
+      od.create_by AS createBy,
+      od.pick_status,
+      oo.customer_name AS customerName,
+      oo.invoice_code AS invoiceCode
+      FROM
+      outbound_order_details od
+      INNER JOIN outbound_order oo ON od.outbound_order_id = oo.id AND oo.status IN (2, 3) <!-- 添加status=2条件 -->
+      LEFT JOIN sku ON od.sku_id = sku.id
+      WHERE
+      1 = 1
+      <if test="invoiceCode != null and invoiceCode != ''">
+        AND oo.invoice_code LIKE CONCAT('%', #{invoiceCode}, '%')
+      </if>
+      <if test="customerName != null and customerName != ''">
+        AND oo.customer_name LIKE CONCAT('%', #{customerName}, '%')
+      </if>
+      <if test="title != null and title != ''">
+        AND sku.title LIKE CONCAT('%', #{title}, '%')
+      </if>
+      <if test="pickStatus != null">
+        AND od.pick_status = #{pickStatus}  <!-- 明细表状态条件 -->
+      </if>
+      ORDER BY od.create_time DESC
+
+
+    </select>
+
 </mapper>

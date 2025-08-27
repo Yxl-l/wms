@@ -17,7 +17,7 @@ const statusOptions = [
   { value: 2, label: '确认发货' },
   { value: 3, label: '拣货中' },
   { value: 4, label: '拣货完成' },
-  { value: 5, label: '待打包' },
+  { value: 5, label: '拣货完成待打包' },
   { value: 6, label: '待称重' },
   { value: 7, label: '待发货' },
   { value: 8, label: '已发货' },

@@ -58,7 +58,6 @@ public class OutboundOrderController {
                 log.error("出库单ID获取失败: {}", outboundOrder);
                 return Result.error("系统错误：无法获取出库单ID");
             }
-
             // 创建出库单详情
             List<OutboundOrderDetails> outboundOrderDetails = outboundOrderDetailsDto.getOutboundOrderDetails();
             if (outboundOrderDetails != null && !outboundOrderDetails.isEmpty()) {

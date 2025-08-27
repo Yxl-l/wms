@@ -131,7 +131,9 @@ const updateOutboundOrderDetails = () => {
   warehousingEntryForm.value.outboundOrderDetails = selectedGoodsList.value.map(item => ({
     skuId: item.skuId,
     outCount: item.outCount,
-    pickStatus: item.pickStatus
+    pickStatus: item.pickStatus,
+    volume: Math.round((parseFloat(item.productVolume) || 0) * (parseInt(item.outCount) || 0)),
+    weight: Math.round((parseFloat(item.productWeight) || 0) * (parseInt(item.outCount) || 0))
   }));
   
   // 计算总计
