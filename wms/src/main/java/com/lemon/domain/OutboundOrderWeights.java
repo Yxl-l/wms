@@ -34,7 +34,11 @@ public class OutboundOrderWeights {
      */
     @TableField(value = "outbound_order_detail_id")
     private Long outboundOrderDetailId;
-
+    /**
+     * 称重状态1：待称重 2：称重完
+     */
+    @TableField(value = "weights_status")
+    private Integer weightsStatus;
     /**
      * 称重员工ID
      */

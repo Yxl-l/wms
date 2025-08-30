@@ -28,6 +28,11 @@ public class OutboundOrderPackage {
      */
     @TableField(value = "package_code")
     private String packageCode;
+    /**
+     * 状态1没打包2已打包
+     */
+    @TableField(value = "package_status")
+    private Integer packageStatus;
 
     /**
      * 出库单明细ID

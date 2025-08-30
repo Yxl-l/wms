@@ -13,5 +13,5 @@ import java.util.List;
 public interface OutboundOrderDetailsMapper extends BaseMapper<OutboundOrderDetails> {
     List<OutboundOrderPickingVo> getPageAll(OutboundOrderPickingDto outboundOrderPickingDto);
 
-    OutboundOrderPickingVo getPickingById(Long id);
+
 }

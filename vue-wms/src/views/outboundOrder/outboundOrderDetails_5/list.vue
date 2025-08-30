@@ -75,8 +75,8 @@ const handleRefresh = () => {
   getPage();
 };
 
-// 处理查看事件
-const handleView =async (row) => {
+// 复检
+const retest =async (row) => {
   let data = {
     id:row.odId,
     pickStatus:0,
@@ -90,11 +90,16 @@ const handleView =async (row) => {
 
   let res = await updateOutboundOrderDetailsApi(data)
   if(res.code==1){
-    ElMessage.success("拣货成功")
+    ElMessage.success("复检成功")
   }else{
-    ElMessage.error("拣货失败")
+    ElMessage.error("复检失败")
+    return
   }
   let res1 = await updateApi(data1)
+  //创建打包单
+
+  // 刷新界面
+  getPage()
 }
 
 // 修改完成后刷新列表
@@ -146,7 +151,7 @@ onMounted(() => {
       <el-table-column prop="createTime" label="创建时间" width="200"/>
       <el-table-column label="操作" width="100" fixed="right">
         <template #default="scope">
-          <el-button type="success"  @click="handleView(scope.row)">复拣</el-button>
+          <el-button type="success"  @click="retest(scope.row)">复拣</el-button>
         </template>
       </el-table-column>
     </el-table>

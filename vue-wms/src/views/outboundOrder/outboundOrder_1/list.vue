@@ -31,11 +31,10 @@
       <el-table-column prop="empId" label="操作员工ID" width="120"/>
       <el-table-column prop="createBy" label="创建人账户" width="120"/>
       <el-table-column prop="createTime" label="创建时间" width="200"/>
-      <el-table-column label="操作" width="250" fixed="right">
+      <el-table-column label="ᅟᅠ       ᅟᅠᅟᅠ 操   ᅟᅠ   ᅟᅠ作" width="280" fixed="right">
         <template #default="scope">
           <el-button type="primary" size="small" @click="handleView(scope.row)">查看</el-button>
           <el-button type="warning" size="small" @click="handleConfirmOutbound(scope.row)">确认发货单</el-button>
-          <el-button type="success" size="small" @click="handleView(scope.row)">拣货复核</el-button>
           <el-button type="danger" size="small" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -59,7 +58,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { getPageApi, deleteApi } from "@/api/outboundOrder.js";
+import { getPageApi, deleteApi,updateApi } from "@/api/outboundOrder.js";
 import Query from "./query.vue";
 import EditOutboundOrder from "./edit.vue";
 import ConfirmOutbound from "./ConfirmOutbound.vue";
@@ -81,9 +80,9 @@ const statusConfig = {
   2: { text: '确认发货', type: 'primary' },
   3: { text: '拣货中', type: 'warning' },
   4: { text: '拣货完成', type: 'success' },
-  5: { text: '拣货完成待打包', type: 'info' },
-  6: { text: '待称重', type: 'info' },
-  7: { text: '待发货', type: 'warning' },
+  5: { text: '拣货完成待打包', type: 'warning' },
+  6: { text: '待称重', type: 'primary' },
+  7: { text: '待发货', type: 'danger' },
   8: { text: '已发货', type: 'success' },
   9: { text: '已签收', type: 'success' }
 };
@@ -150,6 +149,8 @@ const handleDelete = (row) => {
     }
   }).catch(() => { ElMessage.info('已取消删除'); });
 };
+
+
 
 onMounted(() => { getPage(); });
 </script>

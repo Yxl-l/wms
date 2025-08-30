@@ -75,7 +75,7 @@ const handleRefresh = () => {
   getPage();
 };
 
-// 处理查看事件
+// 拣货
 const handleView =async (row) => {
   let data = {
     id:row.odId,
@@ -93,6 +93,8 @@ const handleView =async (row) => {
     ElMessage.error("拣货失败")
   }
   let res1 = await updateApi(data1)
+   // 刷新界面
+  getPage()
 }
 
 // 修改完成后刷新列表

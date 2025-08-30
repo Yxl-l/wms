@@ -1,9 +1,13 @@
 package com.lemon.controller;
+import cn.hutool.core.lang.UUID;
 import com.lemon.domain.OutboundOrderDetails;
+import com.lemon.domain.OutboundOrderPackage;
 import com.lemon.domain.dto.OutboundOrderPickingDto;
 import com.lemon.service.impl.OutboundOrderDetailsServiceImpl;
 import com.lemon.domain.Result;
+import com.lemon.service.impl.OutboundOrderPackageServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,8 @@ public class OutboundOrderDetailsController {
      */
     @Autowired
     private OutboundOrderDetailsServiceImpl outboundOrderDetailsServiceImpl;
+    @Autowired
+    private OutboundOrderPackageServiceImpl outboundOrderPackageServiceImpl;
 
 
     /**
@@ -54,9 +60,24 @@ public class OutboundOrderDetailsController {
     /**
      * 修改出库单明细
      */
+    @Transactional
     @PutMapping
     public Result update(@RequestBody OutboundOrderDetails outboundOrderDetails) {
         outboundOrderDetails.setUpdateTime(new Date());
+        if(outboundOrderDetails.getPickStatus()==0){
+            //进入已复检可打包状态，创建打包单
+            OutboundOrderPackage outboundOrderPackage = new OutboundOrderPackage();
+            outboundOrderPackage.setPackageCode(UUID.fastUUID().toString());
+            outboundOrderPackage.setOutboundOrderDetailId(outboundOrderDetails.getId());
+            outboundOrderPackage.setSkuId(outboundOrderDetailsServiceImpl.getById(outboundOrderDetails.getId()).getSkuId());
+            outboundOrderPackage.setPackageStatus(1);
+            outboundOrderPackage.setCreateBy("蔡徐坤");//创建人
+            outboundOrderPackage.setCreateTime(new Date());
+            boolean packageSaved = outboundOrderPackageServiceImpl.save(outboundOrderPackage);
+            if (!packageSaved) {
+                return Result.error("创建打包单失败");
+            }
+        }
         return outboundOrderDetailsServiceImpl.updateById(outboundOrderDetails) ? Result.success("修改成功") : Result.error("修改失败");
     }
 

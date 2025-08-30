@@ -16,7 +16,8 @@ import com.lemon.service.OutboundOrderDetailsService;
 public class OutboundOrderDetailsServiceImpl extends ServiceImpl<OutboundOrderDetailsMapper, OutboundOrderDetails> implements OutboundOrderDetailsService{
     @Override
     public OutboundOrderPickingVo getPickingById(Long id) {
-        return outboundOrderDetailsMapper.getPickingById(id);
+//        return outboundOrderDetailsMapper.getPickingById(id);
+        return null;
     }
 
     @Autowired
