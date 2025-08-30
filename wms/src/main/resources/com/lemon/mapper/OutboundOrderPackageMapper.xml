@@ -26,45 +26,44 @@
 
   <select id="getPageAll" resultType="com.lemon.domain.vo.OutboundOrderPackageVo">
     SELECT
-      -- 打包单表字段
-      oop.package_code,
-      oop.package_status,
-      oop.create_by,
-      oop.create_time,
-      oop.package_emp_id,
-      oop.package_count,
+    -- 明细单数据
+    ood.weight,
+    ood.volume,
+    ood.pick_emp_id AS pickEmpId,
+    ood.max_count AS maxCount,
 
-      -- 明细单数据
-      ood.weight,
-      ood.volume,
-      ood.pick_emp_id AS pickEmpId,
-      ood.max_count AS maxCount,
 
-      -- SKU表数据
-      s.id,
-      s.title,
-      s.spu_id,
-      s.code,
+    -- SKU表数据
+    s.id AS skuId,
+    s.title,
+    s.spu_id AS spuId,
+    s.code,
 
-      -- 出库单表数据
-      oo.customer_name,
-      oo.invoice_code
+    -- 出库单表数据
+    oo.customer_name AS customerName,
+    oo.invoice_code AS invoiceCode,
+    oo.id AS outboundOrderId,
+
+    -- 打包单表数据
+    oop.create_by AS createBy,
+    oop.create_time AS createTime,
+    oop.package_emp_id AS packageEmpId,
+    oop.package_count AS packageCount,
+    oop.package_status AS packageStatus,
+    oop.id
 
     FROM outbound_order_package oop
--- 关联出库单明细表
-           LEFT JOIN outbound_order_details ood ON oop.outbound_order_detail_id = ood.id
--- 关联SKU表
-           LEFT JOIN sku s ON oop.sku_id = s.id
--- 关联出库单表（通过明细表关联）
-           LEFT JOIN outbound_order oo ON ood.outbound_order_id = oo.id
-    WHERE oop.is_del = 1
-      AND (
-      -- 商品名称条件（模糊匹配）
-      (:title IS NULL OR s.title LIKE CONCAT('%', :title, '%'))
-        AND
-        -- 打包状态条件
-      (:packageStatus IS NULL OR oop.package_status = :packageStatus)
-      )
-    ORDER BY oop.create_time DESC;
+    LEFT JOIN outbound_order_details ood ON oop.outbound_order_detail_id = ood.id
+    LEFT JOIN sku s ON oop.sku_id = s.id
+    LEFT JOIN outbound_order oo ON ood.outbound_order_id = oo.id
+    WHERE 1=1
+    <if test="title != null and title != ''">
+      AND s.title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="packageStatus != null">
+      AND oop.package_status = #{packageStatus}
+    </if>
+
+    ORDER BY oop.create_time DESC
     </select>
 </mapper>
