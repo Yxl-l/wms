@@ -84,8 +84,25 @@ public class OutboundOrderController {
         /**
          * 修改出库单
          */
+    @Transactional // 添加事务注解确保数据一致性
     @PutMapping
     public Result update(@RequestBody OutboundOrder outboundOrder) {
+        if (outboundOrder.getStatus()==666){
+            //自定义当传来Status为10时表明是设置承运单位
+            Integer weight = outboundOrder.getTotalWeight();
+            Integer type = outboundOrder.getLogisticsType();
+            if (weight != null) {
+                //物流物流类型：1，省内、2，普通国内，3，边远地区
+                outboundOrder.setPrice(type==1 ? weight * 3 + 5: type==2 ? weight * 6 + 10 :  weight * 10 + 20 );
+            } else {
+                outboundOrder.setPrice(0);
+            }
+            //物流单号
+            outboundOrder.setLogisticsNumber(UUID.fastUUID().toString());
+            //恢复原有状态，撤销掉用于识别的10
+            outboundOrder.setStatus(null);
+        }
+
         outboundOrder.setUpdateTime(new Date());
         return outboundOrderServiceImpl.updateById(outboundOrder) ? Result.success("修改成功") : Result.error("修改失败");
     }

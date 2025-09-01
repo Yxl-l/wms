@@ -1,5 +1,6 @@
 package com.lemon.controller;
 import com.lemon.domain.OutboundOrderWeights;
+import com.lemon.domain.dto.OutboundOrderWeightsDto;
 import com.lemon.service.impl.OutboundOrderWeightsServiceImpl;
 import com.lemon.domain.Result;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +17,19 @@ import java.util.Date;
 @RestController
 @RequestMapping("/outbound_order_weights")
 public class OutboundOrderWeightsController {
+
     /**
      * 服务对象
      */
     @Autowired
     private OutboundOrderWeightsServiceImpl outboundOrderWeightsServiceImpl;
-
+    /**
+     * 分页查询
+     */
+    @GetMapping
+    public Result getPageAll(OutboundOrderWeightsDto outboundOrderWeightsDto) {
+        return Result.success(outboundOrderWeightsServiceImpl.getPageAll(outboundOrderWeightsDto));
+    }
     /**
      * 新增出库单称重记录
      */

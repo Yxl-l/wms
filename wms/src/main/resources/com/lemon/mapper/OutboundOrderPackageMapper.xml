@@ -25,13 +25,13 @@
   </sql>
 
   <select id="getPageAll" resultType="com.lemon.domain.vo.OutboundOrderPackageVo">
+
     SELECT
     -- 明细单数据
     ood.weight,
     ood.volume,
     ood.pick_emp_id AS pickEmpId,
     ood.max_count AS maxCount,
-
 
     -- SKU表数据
     s.id AS skuId,
@@ -50,6 +50,8 @@
     oop.package_emp_id AS packageEmpId,
     oop.package_count AS packageCount,
     oop.package_status AS packageStatus,
+    oop.package_code AS packageCode,
+    oop.package_time AS packageTime,
     oop.id
 
     FROM outbound_order_package oop
@@ -63,7 +65,12 @@
     <if test="packageStatus != null">
       AND oop.package_status = #{packageStatus}
     </if>
-
+    <if test="packageCode != null and packageCode != ''">
+      AND oop.package_code LIKE CONCAT('%', #{packageCode}, '%')
+    </if>
+    <if test="invoiceCode != null and invoiceCode != ''">
+      AND oo.invoice_code LIKE CONCAT('%', #{invoiceCode}, '%')
+    </if>
     ORDER BY oop.create_time DESC
     </select>
 </mapper>

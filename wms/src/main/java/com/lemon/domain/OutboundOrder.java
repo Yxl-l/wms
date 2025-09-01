@@ -82,7 +82,11 @@ public class OutboundOrder {
      */
     @TableField(value = "logistics_number")
     private String logisticsNumber;
-
+    /**
+     * 物流物流类型：1，省内、2，普通国内，3，边远地区
+     */
+    @TableField(value = "logistics_type")
+    private Integer logisticsType;
     /**
      * SaaS标识
      */

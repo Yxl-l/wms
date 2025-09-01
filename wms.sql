@@ -11,7 +11,7 @@
  Target Server Version : 80034 (8.0.34)
  File Encoding         : 65001
 
- Date: 26/08/2025 22:55:43
+ Date: 01/09/2025 23:22:43
 */
 
 SET NAMES utf8mb4;
@@ -153,7 +153,7 @@ CREATE TABLE `outbound_order`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `customer_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '客户name',
   `invoice_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '发货单号',
-  `status` int NOT NULL DEFAULT 1 COMMENT '状态(1 预发货、2确认发货、3 拣货中、4 拣货完成 、5 待打包、6 待称重、7 待发货、8 已发货、9 已签收)',
+  `status` int NOT NULL DEFAULT 1 COMMENT '状态(1 预发货、2确认发货、3 拣货中、4 拣货完成 、5 拣货完成待打包、6 待称重、7 待发货、8 已发货、9 已签收)',
   `total_count` int NULL DEFAULT 0 COMMENT '总数量',
   `total_weight` int NULL DEFAULT NULL COMMENT '总重量',
   `total_volume` int NULL DEFAULT NULL COMMENT '总体积',
@@ -161,6 +161,7 @@ CREATE TABLE `outbound_order`  (
   `price` int NULL DEFAULT NULL COMMENT '承运费用',
   `logistics_company_id` bigint NULL DEFAULT NULL COMMENT '物流公司ID',
   `logistics_number` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '物流单号',
+  `logistics_type` int NULL DEFAULT NULL COMMENT '物流类型1，省内、2，普通国内，3，边远地区',
   `saas_id` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'SaaS标识',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `create_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人账号',
@@ -168,18 +169,23 @@ CREATE TABLE `outbound_order`  (
   `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
   `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of outbound_order
 -- ----------------------------
-INSERT INTO `outbound_order` VALUES (10, '杨小龙', '1c1fb282-5713-4980-b02c-31b6bd602dee', 2, 30, 800, 800, 1, NULL, NULL, NULL, NULL, '2025-08-26 15:07:58', '蔡徐坤', '2025-08-26 22:50:49', NULL, NULL);
-INSERT INTO `outbound_order` VALUES (12, '555', '0ae66420-3f1a-4a41-9639-5466f5448d01', 8, 30, 180, 1500000, 1, NULL, NULL, NULL, NULL, '2025-08-26 15:36:48', '蔡徐坤', NULL, NULL, NULL);
-INSERT INTO `outbound_order` VALUES (14, '飞科', '17a9ba44-7db0-4ab9-984d-249ef8e38c94', 1, 27, 126, 600324, 1, NULL, NULL, NULL, NULL, '2025-08-26 16:09:06', '蔡徐坤', NULL, NULL, NULL);
-INSERT INTO `outbound_order` VALUES (15, '胡桃', 'ae85ccf3-fe89-4c6c-8c1f-98d4da2430b6', 1, 12, 292, 370000, 1, NULL, NULL, NULL, NULL, '2025-08-26 22:49:36', '蔡徐坤', NULL, NULL, NULL);
-INSERT INTO `outbound_order` VALUES (16, '芙芙', 'f2ec6ba4-7d91-4088-a21e-21250dce9666', 1, 7, 56, 448, 1, NULL, NULL, NULL, NULL, '2025-08-26 22:51:13', '蔡徐坤', NULL, NULL, NULL);
-INSERT INTO `outbound_order` VALUES (17, '山里灵活', '9bf03798-cb41-4e5c-9e42-9f1f05ad3301', 2, 8, 48, 320000, 1, NULL, NULL, NULL, NULL, '2025-08-26 22:51:53', '蔡徐坤', '2025-08-26 22:53:49', NULL, NULL);
-INSERT INTO `outbound_order` VALUES (18, '刻晴', '31361610-721f-477d-8bcf-48d7221c9d00', 1, 1, 6, 40000, 1, NULL, NULL, NULL, NULL, '2025-08-26 22:52:28', '蔡徐坤', NULL, NULL, NULL);
+INSERT INTO `outbound_order` VALUES (23, '杨小龙', 'bfda838d-3447-4015-98bd-04a4bc984223', 5, 9, 168, 54162, 1, NULL, NULL, NULL, NULL, NULL, '2025-08-28 00:37:13', '蔡徐坤', '2025-08-28 21:01:22', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (24, '胡桃呀', 'd5a830ed-a735-4814-b29a-cc53ad73346e', 1, 30, 240, 1920, 1, NULL, NULL, NULL, NULL, NULL, '2025-08-28 00:37:42', '蔡徐坤', NULL, NULL, NULL);
+INSERT INTO `outbound_order` VALUES (25, '蔡徐坤', 'ce21a845-fbfe-4468-8b53-3a073d58defe', 7, 5, 30, 200000, 1, 95, 4, '25bc57a8-b73f-43ed-a960-ff982c652b24', 1, NULL, '2025-08-28 00:43:02', '蔡徐坤', '2025-09-01 23:22:13', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (26, '冯凯', '389d6eda-6705-4b36-9a89-d4008698be71', 9, 12, 256, 232256, 1, 1546, 1, 'b964abde-106c-4010-bf7b-6fcf9152dfdd', 2, NULL, '2025-08-28 08:33:15', '蔡徐坤', '2025-09-01 23:17:23', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (27, '纳西达', 'bcd762a9-13dc-42d1-bfce-dbf2c76667c0', 2, 4, 24, 200000, 1, NULL, NULL, NULL, NULL, NULL, '2025-08-30 21:21:55', '蔡徐坤', '2025-08-30 21:22:07', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (28, '丁工资', 'bd818b7e-59fb-4d1f-8e03-9eb3695a80bf', 5, 5, 30, 200000, 1, NULL, NULL, NULL, NULL, NULL, '2025-09-01 10:50:45', '蔡徐坤', '2025-09-01 16:57:59', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (29, '海波', '2c33bb61-3f88-4a09-8104-02ed5c946dbc', 2, 14, 700, 252000, 1, NULL, NULL, NULL, NULL, NULL, '2025-09-01 16:52:52', '蔡徐坤', '2025-09-01 16:53:02', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (30, '甘雨', '0baa33bb-dc47-400f-a1df-7e97960b1409', 6, 33, 198, 1320000, 1, NULL, NULL, NULL, NULL, NULL, '2025-09-01 16:54:58', '蔡徐坤', '2025-09-01 23:21:47', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (31, '希儿', 'd144be4a-183d-458a-a601-025bb58b3b9d', 2, 16, 96, 640000, 1, NULL, NULL, NULL, NULL, NULL, '2025-09-01 16:55:12', '蔡徐坤', '2025-09-01 16:55:24', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (32, '鸡哥', '6c5169c0-0189-4838-96f4-d3a8ce3d5ed4', 7, 40, 240, 1700000, 1, 2420, 2, 'afbdbbab-62b0-4a4a-805a-5b40dd0bbbf7', 3, NULL, '2025-09-01 16:57:11', '蔡徐坤', '2025-09-01 23:10:55', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (33, '嘤嘤嘤', 'eedf2b8d-cebe-4767-9def-85a662c83910', 3, 1, 6, 40000, 1, NULL, NULL, NULL, NULL, NULL, '2025-09-01 18:54:46', '蔡徐坤', '2025-09-01 18:55:04', NULL, NULL);
+INSERT INTO `outbound_order` VALUES (34, 'qqqq', '408d884f-b87b-40ba-b039-5d02100d67e7', 3, 2, 14, 40064, 1, NULL, NULL, NULL, NULL, NULL, '2025-09-01 21:28:46', '蔡徐坤', '2025-09-01 21:29:53', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for outbound_order_details
@@ -194,7 +200,9 @@ CREATE TABLE `outbound_order_details`  (
   `target_warehouse_area_id` int NULL DEFAULT NULL COMMENT '库位ID',
   `target_warehouse_area_loca_id` int NULL DEFAULT NULL COMMENT '库位ID',
   `outbound_order_id` bigint NULL DEFAULT NULL COMMENT '出库单ID',
-  `pick_status` int NOT NULL DEFAULT 1 COMMENT '拣货状态(1 未拣货、2 已拣货)',
+  `volume` int NULL DEFAULT NULL COMMENT '货体积',
+  `weight` int NULL DEFAULT NULL COMMENT '货重量',
+  `pick_status` int NOT NULL DEFAULT 1 COMMENT '拣货状态(1 未拣货、2 已拣货 0复检完成可打包)',
   `pick_emp_id` int NULL DEFAULT NULL COMMENT '拣货复核员工ID',
   `pick_time` datetime NULL DEFAULT NULL COMMENT '拣货复核时间',
   `saas_id` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'SaaS标识',
@@ -204,20 +212,27 @@ CREATE TABLE `outbound_order_details`  (
   `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
   `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单明细' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单明细' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of outbound_order_details
 -- ----------------------------
-INSERT INTO `outbound_order_details` VALUES (3, 1, 30, 30, 2, 3, 10, 10, 1, NULL, NULL, NULL, '2025-08-26 15:07:58', '蔡徐坤', '2025-08-26 22:50:49', NULL, NULL);
-INSERT INTO `outbound_order_details` VALUES (5, 4, 30, 30, NULL, NULL, NULL, 12, 1, NULL, NULL, NULL, '2025-08-26 15:36:48', '蔡徐坤', NULL, NULL, NULL);
-INSERT INTO `outbound_order_details` VALUES (7, 1, 15, 15, NULL, NULL, NULL, 14, 1, NULL, NULL, NULL, '2025-08-26 16:09:06', NULL, NULL, NULL, NULL);
-INSERT INTO `outbound_order_details` VALUES (8, 5, 12, 12, NULL, NULL, NULL, 14, 1, NULL, NULL, NULL, '2025-08-26 16:09:06', NULL, NULL, NULL, NULL);
-INSERT INTO `outbound_order_details` VALUES (9, 7, 5, 5, NULL, NULL, NULL, 15, 1, NULL, NULL, NULL, '2025-08-26 22:49:36', NULL, NULL, NULL, NULL);
-INSERT INTO `outbound_order_details` VALUES (10, 3, 7, 7, NULL, NULL, NULL, 15, 1, NULL, NULL, NULL, '2025-08-26 22:49:36', NULL, NULL, NULL, NULL);
-INSERT INTO `outbound_order_details` VALUES (11, 8, 7, 7, NULL, NULL, NULL, 16, 1, NULL, NULL, NULL, '2025-08-26 22:51:13', NULL, NULL, NULL, NULL);
-INSERT INTO `outbound_order_details` VALUES (12, 2, 8, 8, 2, 3, 10, 17, 1, NULL, NULL, NULL, '2025-08-26 22:51:53', NULL, '2025-08-26 22:53:49', NULL, NULL);
-INSERT INTO `outbound_order_details` VALUES (13, 1, 1, 1, NULL, NULL, NULL, 18, 1, NULL, NULL, NULL, '2025-08-26 22:52:28', NULL, NULL, NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (20, 7, 3, 3, 1, 2, 7, 23, 54000, 150, 2, 1, '2025-08-28 21:01:22', NULL, '2025-08-28 00:37:13', NULL, '2025-08-28 21:01:22', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (21, 6, 6, 6, 1, 5, 16, 23, 162, 18, 1, NULL, '2025-08-28 20:58:47', NULL, '2025-08-28 00:37:13', NULL, '2025-08-28 20:58:47', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (22, 8, 30, 30, NULL, NULL, NULL, 24, 1920, 240, 1, NULL, NULL, NULL, '2025-08-28 00:37:42', NULL, NULL, NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (23, 3, 5, 5, 1, 5, 17, 25, 200000, 30, 0, 1, '2025-08-28 21:42:43', NULL, '2025-08-28 00:43:02', NULL, '2025-08-28 21:42:44', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (24, 8, 4, 4, 1, 2, 2, 26, 256, 32, 0, 1, '2025-09-01 10:46:45', NULL, '2025-08-28 08:33:15', NULL, '2025-09-01 10:46:46', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (25, 3, 4, 4, 2, 3, 10, 26, 160000, 24, 1, NULL, NULL, NULL, '2025-08-28 08:33:15', NULL, '2025-08-28 21:07:40', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (26, 7, 4, 4, 1, 1, 4, 26, 72000, 200, 1, NULL, NULL, NULL, '2025-08-28 08:33:15', NULL, '2025-08-28 21:07:40', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (27, 4, 4, 4, 2, 3, 10, 27, 200000, 24, 1, NULL, NULL, NULL, '2025-08-30 21:21:55', NULL, '2025-08-30 21:22:07', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (28, 2, 5, 5, 1, 1, 1, 28, 200000, 30, 0, 1, '2025-09-01 16:57:59', NULL, '2025-09-01 10:50:45', NULL, '2025-09-01 16:57:59', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (29, 7, 14, 14, 1, 4, 14, 29, 252000, 700, 1, NULL, NULL, NULL, '2025-09-01 16:52:52', NULL, '2025-09-01 16:53:02', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (30, 3, 33, 33, 1, 1, 1, 30, 1320000, 198, 0, 1, '2025-09-01 16:55:55', NULL, '2025-09-01 16:54:58', NULL, '2025-09-01 16:55:55', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (31, 2, 16, 16, 1, 2, 2, 31, 640000, 96, 1, NULL, NULL, NULL, '2025-09-01 16:55:12', NULL, '2025-09-01 16:55:24', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (32, 4, 10, 10, 1, 1, 3, 32, 500000, 60, 2, 1, '2025-09-01 16:57:58', NULL, '2025-09-01 16:57:11', NULL, '2025-09-01 17:00:16', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (36, 3, 1, 1, 1, 1, 1, 33, 40000, 6, 2, NULL, NULL, NULL, '2025-09-01 18:54:46', NULL, '2025-09-01 18:55:04', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (37, 1, 1, 1, 1, 1, 1, 34, 40000, 6, 2, NULL, NULL, NULL, '2025-09-01 21:28:46', NULL, '2025-09-01 21:29:22', NULL, NULL);
+INSERT INTO `outbound_order_details` VALUES (38, 8, 1, 1, 2, 3, 10, 34, 64, 8, 2, NULL, NULL, NULL, '2025-09-01 21:28:46', NULL, '2025-09-01 21:29:53', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for outbound_order_package
@@ -226,9 +241,10 @@ DROP TABLE IF EXISTS `outbound_order_package`;
 CREATE TABLE `outbound_order_package`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `package_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '打包单号',
+  `package_status` int NOT NULL COMMENT '1未打包 2已打包',
   `outbound_order_detail_id` bigint NOT NULL COMMENT '出库单明细ID',
   `sku_id` bigint NOT NULL COMMENT '规格ID',
-  `package_count` int NOT NULL COMMENT '打包数量',
+  `package_count` int NULL DEFAULT 0 COMMENT '打包数量',
   `package_emp_id` int NULL DEFAULT NULL COMMENT '打包员工ID',
   `package_time` datetime NULL DEFAULT NULL COMMENT '打包时间',
   `saas_id` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'SaaS标识',
@@ -238,11 +254,16 @@ CREATE TABLE `outbound_order_package`  (
   `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
   `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单打包表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单打包表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of outbound_order_package
 -- ----------------------------
+INSERT INTO `outbound_order_package` VALUES (1, '7d2ce54f-7d74-4a3b-84f5-6dcd2fbe1621', 2, 23, 3, 5, 1, '2025-09-01 16:56:19', NULL, '2025-08-28 21:42:44', '蔡徐坤', '2025-09-01 16:56:19', NULL, NULL);
+INSERT INTO `outbound_order_package` VALUES (2, '70b36c89-98ae-4dc4-a1ee-78af65023efb', 2, 24, 8, 4, 1, '2025-09-01 11:07:40', NULL, '2025-09-01 10:46:46', '蔡徐坤', '2025-09-01 11:07:40', NULL, NULL);
+INSERT INTO `outbound_order_package` VALUES (3, '2b6cd44e-8040-4101-9a34-cb4be1443470', 2, 30, 3, 33, 1, '2025-09-01 23:21:46', NULL, '2025-09-01 16:55:55', '蔡徐坤', '2025-09-01 23:21:46', NULL, NULL);
+INSERT INTO `outbound_order_package` VALUES (4, 'c336592f-a3cc-4eb6-9624-1e61861e4cb0', 2, 32, 4, 10, 1, '2025-09-01 18:53:51', NULL, '2025-09-01 16:57:59', '蔡徐坤', '2025-09-01 18:53:52', NULL, NULL);
+INSERT INTO `outbound_order_package` VALUES (5, '54ef462d-5004-4523-8e65-77db1b70114c', 1, 28, 2, 0, NULL, NULL, NULL, '2025-09-01 16:57:59', '蔡徐坤', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for outbound_order_weights
@@ -251,11 +272,12 @@ DROP TABLE IF EXISTS `outbound_order_weights`;
 CREATE TABLE `outbound_order_weights`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `weights_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '称重单号',
+  `weights_status` int NOT NULL COMMENT '1未称重 2已称重',
   `outbound_order_detail_id` bigint NOT NULL COMMENT '出库单明细ID',
   `weights_emp_id` int NOT NULL COMMENT '称重员工ID',
-  `weights_time` datetime NOT NULL COMMENT '称重时间',
-  `weight_val` int NOT NULL COMMENT '称重质量',
-  `weights_unit` int NOT NULL COMMENT '称重单位',
+  `weights_time` datetime NULL DEFAULT NULL COMMENT '称重时间',
+  `weight_val` int NULL DEFAULT NULL COMMENT '称重质量',
+  `weights_unit` int NULL DEFAULT 1 COMMENT '称重单位',
   `saas_id` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'SaaS标识',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `create_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人账号',
@@ -263,11 +285,15 @@ CREATE TABLE `outbound_order_weights`  (
   `update_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改人账号',
   `is_del` int NULL DEFAULT NULL COMMENT '是否删除  1 未删除  2 已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单称重记录表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '出库单称重记录表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of outbound_order_weights
 -- ----------------------------
+INSERT INTO `outbound_order_weights` VALUES (1, 'ab3384d1-13b0-43e3-8bbd-24679c315369', 2, 24, 1, '2025-09-01 16:51:21', 10, 1, NULL, '2025-09-01 11:07:40', '蔡徐坤', '2025-09-01 16:51:21', NULL, NULL);
+INSERT INTO `outbound_order_weights` VALUES (2, 'a216ee03-0e6b-482c-8e43-308a8ee590ab', 2, 23, 1, '2025-09-01 23:21:59', 555, 1, NULL, '2025-09-01 16:56:19', '蔡徐坤', '2025-09-01 23:21:59', NULL, NULL);
+INSERT INTO `outbound_order_weights` VALUES (3, '886c7b4e-69f7-43aa-8759-802d9ea39faa', 2, 32, 1, '2025-09-01 22:56:20', 60, 1, NULL, '2025-09-01 18:53:52', '蔡徐坤', '2025-09-01 22:56:20', NULL, NULL);
+INSERT INTO `outbound_order_weights` VALUES (4, '63d0e713-6382-4df6-bdd6-b9c53e32bef6', 1, 30, 1, NULL, NULL, 1, NULL, '2025-09-01 23:21:46', '蔡徐坤', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for pcd
@@ -349,9 +375,9 @@ CREATE TABLE `sku`  (
 -- Records of sku
 -- ----------------------------
 INSERT INTO `sku` VALUES (1, 299.00, 399.00, 10, 'cxk123456', '蔡徐坤的卫衣', 1, 6, 40, 50, 20, 40000, '0', '11', '2025-08-08 17:13:17', NULL, NULL, NULL, 1);
-INSERT INTO `sku` VALUES (2, 288.00, 366.00, 10, 'cxk123457', '蔡徐坤的卫衣', 1, 6, 40, 50, 20, 40000, '0', '12', '2025-08-08 17:13:17', NULL, NULL, NULL, 1);
-INSERT INTO `sku` VALUES (3, 998.00, 366.00, 11, 'cxk123457', '蔡徐坤的裙子', 1, 6, 40, 50, 20, 40000, '0', '13', '2025-08-08 17:13:17', NULL, NULL, NULL, 1);
-INSERT INTO `sku` VALUES (4, 788.00, 366.00, 11, 'cxk123457', '蔡徐坤的裙子', 1, 6, 40, 50, 20, 50000, '0', '14', '2025-08-08 17:13:17', NULL, NULL, NULL, 1);
+INSERT INTO `sku` VALUES (2, 288.00, 366.00, 10, 'cxk123457', '蔡徐坤的卫3', 1, 6, 40, 50, 20, 40000, '0', '12', '2025-08-08 17:13:17', NULL, NULL, NULL, 1);
+INSERT INTO `sku` VALUES (3, 998.00, 366.00, 11, 'cxk123457', '蔡徐坤的裙46854rh', 1, 6, 40, 50, 20, 40000, '0', '13', '2025-08-08 17:13:17', NULL, NULL, NULL, 1);
+INSERT INTO `sku` VALUES (4, 788.00, 366.00, 11, 'cxk123457', '蔡徐坤的裙子00000', 1, 6, 40, 50, 20, 50000, '0', '14', '2025-08-08 17:13:17', NULL, NULL, NULL, 1);
 INSERT INTO `sku` VALUES (5, 3.00, 3.00, 12, 'wazi123', '精品袜子', 3, 3, 3, 3, 3, 27, '3', '3', '2025-08-09 08:38:56', NULL, NULL, NULL, 1);
 INSERT INTO `sku` VALUES (6, 3.00, 3.00, 12, 'wazi124', '精品袜子', 3, 3, 3, 3, 3, 27, '3', '3', '2025-08-09 08:38:56', NULL, NULL, NULL, 1);
 INSERT INTO `sku` VALUES (7, 669.00, 399.00, 14, 'banxie11', '板鞋', 2, 50, 30, 30, 20, 18000, '1', '2', '2025-08-10 08:30:28', NULL, NULL, NULL, 1);

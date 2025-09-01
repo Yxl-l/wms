@@ -8,6 +8,7 @@ import com.lemon.service.impl.OutboundOrderDetailsServiceImpl;
 import com.lemon.service.impl.OutboundOrderPackageServiceImpl;
 import com.lemon.service.impl.OutboundOrderWeightsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,17 @@ public class OutboundOrderPackageController {
      */
     @PostMapping
     public Result add(@RequestBody OutboundOrderPackage outboundOrderPackage) {
+
+        outboundOrderPackage.setUpdateTime(new Date());
+        return outboundOrderPackageServiceImpl.save(outboundOrderPackage) ? Result.success("添加成功") : Result.error("添加失败");
+    }
+
+    /**
+     * 修改出库单打包记录
+     */
+    @Transactional
+    @PutMapping
+    public Result update(@RequestBody OutboundOrderPackage outboundOrderPackage) {
         //获取该打保单完整数据
         OutboundOrderPackage oop = outboundOrderPackageServiceImpl.getById(outboundOrderPackage.getId());
         //获取能打包的最大数量
@@ -58,7 +70,7 @@ public class OutboundOrderPackageController {
         //合法创建称重单
         OutboundOrderWeights outboundOrderWeights = new OutboundOrderWeights();
         outboundOrderWeights.setWeightsCode(UUID.fastUUID().toString());
-        outboundOrderWeights.setOutboundOrderDetailId(outboundOrderPackage.getOutboundOrderDetailId());
+        outboundOrderWeights.setOutboundOrderDetailId(outboundOrderPackageServiceImpl.getById(outboundOrderPackage.getId()).getOutboundOrderDetailId());
         outboundOrderWeights.setWeightsEmpId(1);
         outboundOrderWeights.setCreateTime(new Date());
         outboundOrderWeights.setWeightsUnit(1);
@@ -67,16 +79,6 @@ public class OutboundOrderPackageController {
         //创建称重单
         outboundOrderWeightsServiceImpl.save(outboundOrderWeights);
         //修改打保单
-        outboundOrderPackage.setUpdateTime(new Date());
-        return outboundOrderPackageServiceImpl.save(outboundOrderPackage) ? Result.success("添加成功") : Result.error("添加失败");
-    }
-
-    /**
-     * 修改出库单打包记录
-     */
-    @PutMapping
-    public Result update(@RequestBody OutboundOrderPackage outboundOrderPackage) {
-
         outboundOrderPackage.setUpdateTime(new Date());
         return outboundOrderPackageServiceImpl.updateById(outboundOrderPackage) ? Result.success("修改成功") : Result.error("修改失败");
     }

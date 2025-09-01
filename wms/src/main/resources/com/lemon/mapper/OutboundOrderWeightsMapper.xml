@@ -23,4 +23,58 @@
     id, weights_code, outbound_order_detail_id, weights_emp_id, weights_time, weight_val, 
     weights_unit, saas_id, create_time, create_by, update_time, update_by, is_del
   </sql>
+
+  <select id="getPageAll" resultType="com.lemon.domain.vo.OutboundOrderWeightsVo">
+    SELECT
+    -- 称重单表字段
+    wow.id AS id,
+    wow.weights_code AS weightsCode,
+    wow.weights_status AS weightsStatus,
+    wow.weights_time AS weightsTime,
+    wow.create_by AS createBy,
+    wow.create_time AS createTime,
+    wow.weights_emp_id AS weightsEmpId,
+    wow.weight_val AS weightVal,
+
+    -- 明细单数据
+    ood.weight AS weight,
+    ood.volume AS volume,
+    ood.pick_emp_id AS pickEmpId,
+    ood.max_count AS maxCount,
+
+    -- sku表字段
+    s.id AS skuId,
+    s.title AS title,
+    s.spu_id AS spuId,
+    s.code AS code,
+
+    -- 出库单表字段
+    oo.customer_name AS customerName,
+    oo.invoice_code AS invoiceCode,
+    oo.id AS outboundOrderId,
+
+    -- 打包单表字段
+    oop.package_emp_id AS packageEmpId,
+    oop.package_code AS packageCode
+
+    FROM outbound_order_weights wow
+    LEFT JOIN outbound_order_details ood ON wow.outbound_order_detail_id = ood.id
+    LEFT JOIN sku s ON ood.sku_id = s.id
+    LEFT JOIN outbound_order oo ON ood.outbound_order_id = oo.id
+    LEFT JOIN outbound_order_package oop ON ood.id = oop.outbound_order_detail_id
+    WHERE 1=1
+    <if test="title != null and title != ''">
+      AND s.title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="weightsStatus != null">
+      AND wow.weights_status = #{weightsStatus}
+    </if>
+    <if test="invoiceCode != null and invoiceCode != ''">
+      AND oo.invoice_code LIKE CONCAT('%', #{invoiceCode}, '%')
+    </if>
+    <if test="weightsCode != null and weightsCode != ''">
+      AND wow.weights_code LIKE CONCAT('%', #{weightsCode}, '%')
+    </if>
+    ORDER BY wow.create_time DESC
+    </select>
 </mapper>
