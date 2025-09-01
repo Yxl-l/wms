@@ -1,76 +1,18 @@
 <script setup>
-import { getPageApi, updateApi } from "@/api/warehousingEntryUp";
+import { getPageApi,updateApi } from "@/api/outboundOrder";
 import Query from "./query.vue";
-import { onMounted, ref, reactive } from "vue";
+import { onMounted, ref } from "vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getAllApi as getSupplierAllApi } from "@/api/supplier";
-import { getSkuAllApi } from "@/api/goods";
-import { getWarehouseAllApi, getAreaByWarehouseIdApi, getPageAreaLocaApi } from "@/api/warehouse";
-
-const queryRef = ref();
-
-// 上架弹窗相关
-const shelfDialogVisible = ref(false)
-const shelfForm = reactive({
-  id: null,
-  skuId: null,
-  warehouseId: null,
-  warehouseAreaId: null,
-  warehouseAreaLocaId: null,
-  count: null
-})
-
-// 仓库、库区、库位相关数据
-const warehouseList = ref([])
-const areaList = ref([])
-const locaList = ref([])
-
-// 状态映射
-const statusMap = {
-  1: '未上架',
-  2: '已上架'
-}
-
-// 状态类型映射（用于el-tag的type属性）
-const statusTypeMap = {
-  1: 'danger',
-  2: 'success'
-}
-
-// 分页相关
-const warehousingEntryUpList = ref([])
-const page = ref(1)
-const pageSize = ref(8)
-const totalSize = ref(0)
-
-// 数据映射
-const supplierMap = ref(new Map())
-const skuListMap = ref(new Map())
-const warehouseMap = ref(new Map())
-const areaMap = ref(new Map())
-const locaMap = ref(new Map())
-
-// 获取所有sku数据用于映射
-const getSkuAll = async () => {
+//获取全部物流公司
+import{getAllApi} from "@/api/logistics"
+//全部物流公司用于映射
+const LogisticsMap = ref(new Map())
+const getLogistics = async () => {
   try {
-    const res = await getSkuAllApi();
+    const res = await getAllApi();
     if (res.data) {
       res.data.forEach(item => {
-        skuListMap.value.set(item.id, item.title);
-      });
-    }
-  } catch (error) {
-    console.error("获取sku数据失败:", error);
-  }
-};
-
-// 获取所有供应商数据用于映射
-const getSupplierData = async () => {
-  try {
-    const res = await getSupplierAllApi();
-    if (res.data) {
-      res.data.forEach(item => {
-        supplierMap.value.set(item.id, item.supplierName);
+        LogisticsMap.value.set(item.id, item.companyName);
       });
     }
   } catch (error) {
@@ -78,99 +20,58 @@ const getSupplierData = async () => {
   }
 };
 
-// 获取仓库数据用于映射
-const getWarehouseData = async () => {
-  try {
-    const res = await getWarehouseAllApi();
-    if (res.data) {
-      res.data.forEach(item => {
-        warehouseMap.value.set(item.id, item.name);
-      });
-    }
-  } catch (error) {
-    console.error("获取仓库数据失败:", error);
-  }
-};
+const dialogFormVisible = ref(false); //控制对话框的显示与隐藏
+const carrierUnitDialogVisible = ref(false); // 承运单位设置对话框
+const queryRef = ref();
+const editRef = ref() // 修改组件的引用
+const currentRow = ref({}) // 当前行数据
 
-// 获取库区数据用于映射
-const getAreaData = async (areaId) => {
-  if (!areaId || areaMap.value.has(areaId)) return;
-  
-  try {
-    const res = await getAreaDetailApi(areaId);
-    if (res.data) {
-      areaMap.value.set(areaId, res.data.name);
-    }
-  } catch (error) {
-    console.error("获取库区数据失败:", error);
-  }
-};
+// 分页相关
+const outboundOrderList = ref([])
+const page = ref(1)
+const pageSize = ref(99999)
+const totalSize = ref(0)
 
-// 获取库位数据用于映射
-const getLocaData = async (locaId) => {
-  if (!locaId || locaMap.value.has(locaId)) return;
-  
-  try {
-    const res = await getAreaLocaDetailApi(locaId);
-    if (res.data) {
-      locaMap.value.set(locaId, res.data.locaCode);
-    }
-  } catch (error) {
-    console.error("获取库位数据失败:", error);
-  }
-};
+// 承运单位表单数据
+const carrierUnitForm = ref({
+  id: '',
+  status: 666,
+  logisticsCompanyId: '',
+  logisticsType: '' ,// 新增物流类型字段
+  totalWeight: '',
+})
 
-// 获取仓库列表
-const getWarehouseList = async () => {
-  try {
-    const res = await getWarehouseAllApi();
-    if (res.data) {
-      warehouseList.value = res.data;
-    }
-  } catch (err) {
-    console.error("获取仓库列表失败:", err);
-  }
-};
+// 物流类型映射
+const logisticsTypeMap = {
+  1: '省内',
+  2: '普通国内',
+  3: '边远地区'
+}
 
-// 当仓库改变时，获取对应的库区列表
-const handleWarehouseChange = async (warehouseId) => {
-  shelfForm.warehouseAreaId = null;
-  shelfForm.warehouseAreaLocaId = null;
-  areaList.value = [];
-  locaList.value = [];
-      const res = await getAreaByWarehouseIdApi(warehouseId);
-      areaList.value = res.rows;
-};
+// 状态映射和样式
+const statusConfig = {
+  7: { text: '未出库', type: 'danger' },
+  8: { text: '已出库', type: 'primary' },
+  9: { text: '已签收', type: 'success' }
+}
 
-// 当库区改变时，获取对应的库位列表
-const handleAreaChange = async (areaId) => {
-  shelfForm.warehouseAreaLocaId = null;
-  locaList.value = [];
-      const res = await getPageAreaLocaApi(1, 1000, areaId);
-        locaList.value = res.rows;
-    } ;
-
-// 分页查询数据
 const getPage = async () => {
-  
-    let res = await getPageApi(
+  try {
+    const res = await getPageApi(
       page.value,
       pageSize.value,
-      queryRef.value?.searchForm?.warehouseId || '',
-      queryRef.value?.searchForm?.skuId || '',
+      queryRef.value?.searchForm?.customerName || '',
+      queryRef.value?.searchForm?.invoiceCode || '',
       queryRef.value?.searchForm?.status || ''
     );
-    
-   
-      warehousingEntryUpList.value = res.rows || [];
-      totalSize.value = res.total || 0;
-      
-      // 获取关联数据用于显示
-      for (const item of warehousingEntryUpList.value) {
-        await getAreaData(item.warehouseAreaId);
-        await getLocaData(item.warehouseAreaLocaId);
-      }
-    };
+    // 只显示 status 为 7 或 8 的数据
+    const filteredData = res.data.rows.filter(item => item.status === 7 || item.status === 8);
+    outboundOrderList.value = filteredData || [];
+    totalSize.value = filteredData.length || 0;
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 const handleSizeChange = (val) => {
   pageSize.value = val
@@ -197,101 +98,112 @@ const handleRefreshZi = () => {
 // 刷新界面
 const handleRefresh = () => {
   if (queryRef.value) {
-    queryRef.value.searchForm.warehouseId = '';
-    queryRef.value.searchForm.skuId = '';
-    queryRef.value.searchForm.status = '';
+    queryRef.value.searchForm.customerName = '';
+    queryRef.value.searchForm.invoiceCode = ''
+    queryRef.value.searchForm.status = ''
   }
   page.value = 1;
   getPage();
 };
 
-// 处理上架事件
-const handleEdit = (row) => {
-  // 初始化表单数据
-  shelfForm.id = row.id;
-  shelfForm.skuId = row.skuId;
-  shelfForm.count = row.count || 0;
-  
-  // 设置默认值
-  shelfForm.warehouseId = row.warehouseId || null;
-  shelfForm.warehouseAreaId = row.warehouseAreaId || null;
-  shelfForm.warehouseAreaLocaId = row.warehouseAreaLocaId || null;
-  
-  // 获取仓库列表
-  getWarehouseList();
-  
-  // 如果已有仓库ID，获取对应的库区列表
-  if (row.warehouseId) {
-    handleWarehouseChange(row.warehouseId);
-  }
-  
-  // 如果已有库区ID，获取对应的库位列表
-  if (row.warehouseAreaId) {
-    handleAreaChange(row.warehouseAreaId);
-  }
-  
-  // 显示上架弹窗
-  shelfDialogVisible.value = true;
-};
+// 设置承运单位
+const setCarrierUnit = (row) => {
+  currentRow.value = row
+  carrierUnitForm.value.id = row.id
+  carrierUnitForm.value.logisticsCompanyId = row.logisticsCompanyId || ''
+  carrierUnitForm.value.logisticsType = row.logisticsType || '' // 设置物流类型
+  carrierUnitForm.value.totalWeight = row.totalWeight || ''
+  carrierUnitDialogVisible.value = true
+}
 
-// 提交上架信息
-const submitShelfForm = async () => {
+// 提交承运单位设置
+const submitCarrierUnit = async () => {
+  if (!carrierUnitForm.value.logisticsCompanyId) {
+    ElMessage.warning("请选择承运单位")
+    return
+  }
+  
+  if (!carrierUnitForm.value.logisticsType) {
+    ElMessage.warning("请选择物流类型")
+    return
+  }
+  
   try {
-    // 更新入库上架记录
-    const data = {
-      id: shelfForm.id,
-      warehouseId: shelfForm.warehouseId,
-      warehouseAreaId: shelfForm.warehouseAreaId,
-      warehouseAreaLocaId: shelfForm.warehouseAreaLocaId,
-      count: shelfForm.count,
-      status: 2 // 已上架
-    };
-    
-    const res = await updateApi(data);
-    
+    const res = await updateApi(carrierUnitForm.value)
     if (res.code === 1) {
-      ElMessage.success("上架成功");
-      shelfDialogVisible.value = false;
-      getPage(); // 刷新列表
+      ElMessage.success("承运单位设置成功")
+      carrierUnitDialogVisible.value = false
+    
     } else {
-      ElMessage.error("上架失败: " + res.msg);
+      ElMessage.error("承运单位设置失败: " + res.msg)
     }
-  } catch (err) {
-    console.error("上架失败:", err);
-    ElMessage.error("上架失败");
+  } catch (error) {
+    console.error(error)
+    ElMessage.error("承运单位设置异常")
   }
-};
+  handleRefresh();
+}
 
-// 处理下架事件
-const handleDelete = (row) => {
-  ElMessageBox.confirm('确定要下架该记录吗？', '提示', {
+// 出库操作
+const deliveryFromWarehouse = (row) => {
+  ElMessageBox.confirm('确认要将该订单出库吗？', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(async () => {
     try {
-      // 更新状态为未上架
-      const data = {
+      const res = await updateApi({
         id: row.id,
-        status: 1 // 未上架
-      };
-      
-      const res = await updateApi(data);
-      
+        status: 8
+      })
       if (res.code === 1) {
-        ElMessage.success("下架成功");
-        getPage(); // 刷新列表
+        ElMessage.success("出库成功")
+       handleRefresh();
       } else {
-        ElMessage.error("下架失败: " + res.msg);
+        ElMessage.error("出库失败: " + res.msg)
       }
-    } catch (err) {
-      console.error("下架失败:", err);
-      ElMessage.error("下架失败");
+    } catch (error) {
+      console.error(error)
+      ElMessage.error("出库操作异常")
     }
   }).catch(() => {
     // 用户取消操作
-  });
-};
+  })
+
+}
+
+// 签收操作
+const signFor = (row) => {
+  ElMessageBox.confirm('确认该订单已签收吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    try {
+      const res = await updateApi({
+        id: row.id,
+        status: 9
+      })
+      if (res.code === 1) {
+        ElMessage.success("签收成功")
+         handleRefresh();
+      } else {
+        ElMessage.error("签收失败: " + res.msg)
+      }
+    } catch (error) {
+      console.error(error)
+      ElMessage.error("签收操作异常")
+    }
+  }).catch(() => {
+    // 用户取消操作
+  })
+  
+}
+
+// 修改完成后刷新列表
+const handleRefreshEdit = () => {
+  handleRefresh()
+}
 
 // 暴露方法给父组件使用
 defineExpose({
@@ -299,10 +211,8 @@ defineExpose({
 })
 
 onMounted(() => {
-  getSupplierData();
-  getWarehouseData();
   getPage();
-  getSkuAll();
+  getLogistics();
 });
 </script>
 
@@ -311,125 +221,105 @@ onMounted(() => {
     <!-- 添加 ref 绑定   搜索事件  刷新事件  刷新界面-->
     <Query ref="queryRef" @search="handleSearch" @shuaX="handleRefreshZi"/>
     
-    <!-- 上架弹窗 -->
-    <el-dialog v-model="shelfDialogVisible" title="上架信息" width="50%">
-      <el-form :model="shelfForm" label-width="120px">
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="仓库">
-              <el-select 
-                v-model="shelfForm.warehouseId" 
-                placeholder="请选择仓库" 
-                @change="handleWarehouseChange"
-                style="width: 100%"
-              >
-                <el-option
-                  v-for="item in warehouseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          
-          <el-col :span="12">
-            <el-form-item label="库区">
-              <el-select 
-                v-model="shelfForm.warehouseAreaId" 
-                placeholder="请选择库区" 
-                @change="handleAreaChange"
-                :disabled="!shelfForm.warehouseId"
-                style="width: 100%"
-              >
-                <el-option
-                  v-for="item in areaList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          
-          <el-col :span="12">
-            <el-form-item label="库位">
-              <el-select 
-                v-model="shelfForm.warehouseAreaLocaId" 
-                placeholder="请选择库位" 
-                :disabled="!shelfForm.warehouseAreaId"
-                style="width: 100%"
-              >
-                <el-option
-                  v-for="item in locaList"
-                  :key="item.id"
-                  :label="item.locaCode"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          
-          <el-col :span="12">
-            <el-form-item label="上架数量">
-              <el-input-number 
-                v-model="shelfForm.count" 
-                :min="1" 
-                controls-position="right" 
-                style="width: 100%"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
+    <!-- 承运单位设置对话框 -->
+    <el-dialog 
+      title="设置承运单位"
+      style="width: 400px" 
+      v-model="carrierUnitDialogVisible" 
+      :append-to-body="true"
+      top="5vh"
+    >
+      <el-form
+        :model="carrierUnitForm"
+        label-width="auto"
+      >
+        <el-form-item label="承运单位" prop="logisticsCompanyId">
+          <el-select v-model="carrierUnitForm.logisticsCompanyId" placeholder="请选择承运单位" style="width: 100%">
+            <el-option
+              v-for="[id, name] in LogisticsMap"
+              :key="id"
+              :label="name"
+              :value="id"
+            />
+          </el-select>
+        </el-form-item>
+        
+        <el-form-item label="物流类型" prop="logisticsType">
+          <el-select v-model="carrierUnitForm.logisticsType" placeholder="请选择物流类型" style="width: 100%">
+            <el-option
+              v-for="(label, value) in logisticsTypeMap"
+              :key="value"
+              :label="label"
+              :value="Number(value)"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
-      
+
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="shelfDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="submitShelfForm">确认保存</el-button>
+          <el-button type="primary" @click="submitCarrierUnit">提交</el-button>
+        </span>
+        <span class="dialog-footer">
+          <el-button @click="carrierUnitDialogVisible = false">取消</el-button>
         </span>
       </template>
     </el-dialog>
     
-    <el-table :data="warehousingEntryUpList" style="width: 100%">
-      <el-table-column type="index" label="序号" width="60" />
-      <el-table-column prop="skuId" label="规格SKU" width="120">
+
+
+    <el-table :data="outboundOrderList" style="width: 100%">
+      <el-table-column type="index" label="序号" width="80" />
+      <el-table-column prop="invoiceCode" label="发货单号" width="150"/>
+      <el-table-column prop="status" label="发货单状态" width="100">
         <template #default="scope">
-          {{ skuListMap.get(scope.row.skuId) || scope.row.skuId }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="warehouseId" label="仓库" width="120">
-        <template #default="scope">
-          {{ warehouseMap.get(scope.row.warehouseId) || scope.row.warehouseId }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="warehouseAreaId" label="库区" width="120">
-        <template #default="scope">
-          {{ areaMap.get(scope.row.warehouseAreaId) || scope.row.warehouseAreaId }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="warehouseAreaLocaId" label="库位" width="120">
-        <template #default="scope">
-          {{ locaMap.get(scope.row.warehouseAreaLocaId) || scope.row.warehouseAreaLocaId }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="count" label="上架数量" width="100"/>
-      <el-table-column prop="status" label="状态" width="100">
-        <template #default="scope">
-          <el-tag :type="statusTypeMap[scope.row.status] || ''" size="small">
-            {{ statusMap[scope.row.status] || scope.row.status }}
+          <el-tag :type="statusConfig[scope.row.status] ? statusConfig[scope.row.status].type : 'info'">
+            {{ statusConfig[scope.row.status] ? statusConfig[scope.row.status].text : scope.row.status }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建时间" width="180"/>
-      <el-table-column label="操作" width="150" fixed="right">
+      <el-table-column prop="customerName" label="客户名称" width="100"/>
+            <el-table-column prop="price" label="承运费用" width="100">
         <template #default="scope">
-          <el-button type="primary" size="small" @click="handleEdit(scope.row)">上架</el-button>
-          <el-button type="danger" size="small" @click="handleDelete(scope.row)">下架</el-button>
+          <span>{{ scope.row.price || '（暂无）' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="logisticsCompanyId" label="物流公司" width="120">
+        <template #default="scope">
+          <span>{{ LogisticsMap.get(scope.row.logisticsCompanyId) || '（暂无）' }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="logisticsNumber" label="物流单号" width="150">
+        <template #default="scope">
+          <span>{{ scope.row.logisticsNumber || '（暂无）' }}</span>
+        </template>
+      </el-table-column>
+     <el-table-column prop="logisticsNumber" label="物流单号" width="150">
+        <template #default="scope">
+          <span>{{ scope.row.logisticsNumber || '（暂无）' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="logisticsType" label="物流类型" width="100">
+        <template #default="scope">
+          <span>{{ logisticsTypeMap[scope.row.logisticsType] || '（暂无）' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="totalWeight" label="总重量/kg" width="100"/>
+      <el-table-column prop="totalVolume" label="总体积/m³" width="100"/>
+      <el-table-column prop="totalCount" label="总数量" width="100"/>
+      <el-table-column prop="empId" label="操作员工ID" width="120"/>
+      <el-table-column prop="createBy" label="创建人账户" width="120"/>
+      <el-table-column prop="createTime" label="创建时间" width="200"/>
+      <el-table-column label="操作" width="280" fixed="right">
+        <template #default="scope">
+          <el-button type="primary" size="small" @click="setCarrierUnit(scope.row)">设置承运单位</el-button>
+          <el-button type="warning" size="small" @click="deliveryFromWarehouse(scope.row)">出库</el-button>
+          <el-button type="danger" size="small" @click="signFor(scope.row)">签收</el-button>
         </template>
       </el-table-column>
     </el-table>
-   
+    
     <br>
     
     <el-pagination
@@ -437,7 +327,7 @@ onMounted(() => {
       v-model:page-size="pageSize"
       :page-sizes="[8, 16, 24, 32]"
       :small="false"
-      :disabled="false"
+       :disabled="false"
       :background="true"
       layout="total, sizes, prev, pager, next, jumper"
       :total="totalSize"
@@ -446,13 +336,9 @@ onMounted(() => {
     />
   </div>
 </template>
+
 <style scoped>
 div {
   opacity: 0.9;
-}
-.el-tag {
-  font-size: 12px !important;
-  height: auto !important;
-  padding: 4px 8px !important;
 }
 </style>

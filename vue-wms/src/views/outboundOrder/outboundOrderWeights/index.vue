@@ -15,7 +15,7 @@ const handleRefresh = () => {
 
 <template>
  <div>
-   称重操作
+    称重
     
   
 

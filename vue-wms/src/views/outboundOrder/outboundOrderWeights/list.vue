@@ -1,13 +1,15 @@
 <script setup>
-import { getPageApi,updateOutboundOrderDetailsApi } from "@/api/outboundOrderDetails";
+import { getPageApi,updateOutboundOrderWeightsApi } from "@/api/outboundOrderWeights";
 import { updateApi } from "@/api/outboundOrder";
 import Query from "./query.vue";
 import { onMounted, ref } from "vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 
+const dialogFormVisible = ref(false); //控制对话框的显示与隐藏
 const queryRef = ref();
 const editRef = ref() // 修改组件的引用
+const currentRow = ref({}) // 当前行数据
 
 // 分页相关
 const outboundOrderList = ref([])
@@ -15,10 +17,20 @@ const page = ref(1)
 const pageSize = ref(8)
 const totalSize = ref(0)
 
+// 打包表单数据
+const weightsForm = ref({
+  id: '',
+  packageStatus: 1,
+  weightsEmpId: 1,
+ weightVal: '',
+  weightsTime: ''
+})
+
 // 状态映射和样式
 const statusConfig = {
 
-  2: { text: '已拣货待复检', type: 'primary' },
+  1: { text: '未称重', type: 'danger' },
+  2: { text: '已称重', type: 'primary' },
 }
 
 // 分页查询数据
@@ -27,10 +39,12 @@ const getPage = async () => {
     let res = await getPageApi(
       page.value,
       pageSize.value,
-      queryRef.value?.searchForm?.customerName || '',
-      queryRef.value?.searchForm?.invoiceCode || '',
       queryRef.value?.searchForm?.title || '',
-      queryRef.value.searchForm.pickStatus=2,
+      queryRef.value?.searchForm?.weightsStatus || '',
+      queryRef.value?.searchForm?.invoiceCode || '',
+      queryRef.value?.searchForm?.weightsCode || '',
+
+
          // title参数
     );
    
@@ -67,39 +81,61 @@ const handleRefreshZi = () => {
 // 刷新界面
 const handleRefresh = () => {
   if (queryRef.value) {
-    queryRef.value.searchForm.customerName = '';
-    queryRef.value.searchForm.invoiceCode = '';
+    queryRef.value.searchForm.weightsStatus = '';
+ 
     queryRef.value.searchForm.title = '';
+    queryRef.value.searchForm.invoiceCode = ''
+    queryRef.value.searchForm.weightsCode = ''
   }
   page.value = 1;
   getPage();
 };
 
-// 复检
-const retest =async (row) => {
-  let data = {
-    id:row.odId,
-    pickStatus:0,
-    pickEmpId:1,
-    pickTime:new Date()
-  }
-  let data1 = {
-    id:row.outboundOrderId,
-    status:5
-  }
+// 打开打包弹窗
+const retest = (row) => {
+  currentRow.value = row
+  weightsForm.value.id = row.id
+  weightsForm.value.weightVal = ''
+  dialogFormVisible.value = true
+}
 
-  let res = await updateOutboundOrderDetailsApi(data)
-  if(res.code==1){
-    ElMessage.success("复检成功")
-  }else{
-    ElMessage.error("复检失败")
+// 提交打包
+const updata = async () => {
+  if (!weightsForm.value.weightVal) {
+    ElMessage.warning("请输实际称重重量")
     return
   }
-  let res1 = await updateApi(data1)
-  //创建打包单
+  // 准备打包数据
+  const data = {
+    id: weightsForm.value.id,
+    weightsStatus: 2, // 已称重
+    weightsEmpId: weightsForm.value.weightsEmpId,
+    weightVal: weightsForm.value.weightVal,
+    weightsTime: new Date()
+  }
+  
+  // 准备出库单更新数据
+  const data1 = {
+    id: currentRow.value.outboundOrderId,
+    status: 7 // 已称重待出库
+  }
 
-  // 刷新界面
-  getPage()
+  try {
+    let res = await updateOutboundOrderWeightsApi(data)
+    if(res.code==1){
+      ElMessage.success("称重成功")
+      dialogFormVisible.value = false
+    }else{
+      ElMessage.error("称重失败")
+      return
+    }
+    //修改出库单状态为7已称重待出库
+    await updateApi(data1)
+    // 刷新界面
+    getPage()
+  } catch (error) {
+    ElMessage.error("称重失败: " + error.message)
+  }
 }
 
 // 修改完成后刷新列表
@@ -122,39 +158,68 @@ onMounted(() => {
     <!-- 添加 ref 绑定   搜索事件  刷新事件  刷新界面-->
     <Query ref="queryRef" @search="handleSearch" @shuaX="handleRefreshZi"/>
     
+     <el-dialog 
+      style="width: 400px" 
+      v-model="dialogFormVisible" 
+      :append-to-body="true"
+      top="5vh"
+      custom-class="top-dialog"
+    >
+      <el-form
+        :model="weightsForm"
+        label-width="auto"
+      >
+            <el-form-item label="打包商品名称">
+              <el-input :value="currentRow.title " disabled />
+            </el-form-item>
+            <el-form-item label="实际称重重量" prop="weightVal">
+              <el-input v-model="weightsForm.weightVal" />
+            </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="updata">提交</el-button>
+        </span>
+        <span class="dialog-footer">
+          <el-button type="success" @click="dialogFormVisible = false">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
 
 
-    <el-table :data="outboundOrderList" style="width: 100%">
+<el-table :data="outboundOrderList" style="width: 100%">
       <el-table-column type="index" label="序号" width="80" />
-      <el-table-column prop="invoiceCode" label="发货单号" width="150"/>
-      <el-table-column prop="customerName" label="客户名称" width="80"/>
-      <el-table-column prop="id" label="商品编码" width="80"/>
-       <el-table-column prop="pickStatus" label="ᅟᅠ 状态" width="120">
+       <el-table-column prop="weightsStatus" label="ᅟᅠ 状态" width="120">
         <template #default="scope">
-          <el-tag :type="statusConfig[scope.row.pickStatus] ? statusConfig[scope.row.pickStatus].type : 'info'">
-            {{ statusConfig[scope.row.pickStatus] ? statusConfig[scope.row.pickStatus].text : scope.row.pickStatus }}
+          <el-tag :type="statusConfig[scope.row.weightsStatus] ? statusConfig[scope.row.weightsStatus].type : 'info'">
+            {{ statusConfig[scope.row.weightsStatus] ? statusConfig[scope.row.weightsStatus].text : scope.row.weightsStatus }}
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="invoiceCode" label="发货单号" width="150"/>
+      <el-table-column prop="customerName" label="客户名称" width="80"/>
+      <el-table-column prop="skuId" label="商品编码" width="80"/>
+       <el-table-column prop="weightsCode" label="称重单单号" width="150"/>
       <el-table-column prop="title" label="商品名称" width="120"/>
       <el-table-column prop="spuId" label="规格编码" width="80"/>
       <el-table-column prop="code" label="条码" width="120"/>
       <el-table-column prop="maxCount" label="订单数量" width="100"/>
-      <el-table-column prop="pickingCount" label="待检货数量" width="100"/>
-      <el-table-column prop="outCount" label="已拣货数量" width="100"/>
-      <el-table-column prop="weight" label="货重量" width="100"/>
-      <el-table-column prop="volume" label="货体积" width="100"/>
      
-      <el-table-column prop="createBy" label="创建人" width="120">
-        蔡徐坤
-      </el-table-column>
+      <el-table-column prop="volume" label="货体积/m³" width="100"/>
+      <el-table-column prop="weight" label="预估货重量/kg" width="120"/>
+       <el-table-column prop="weightVal" label="实际称重重量/kg" width="130"/>
+
+      <el-table-column prop="createBy" label="创建人" width="120"/>
+        <el-table-column prop="weightsTime" label="称重时间" width="200"/>
       <el-table-column prop="createTime" label="创建时间" width="200"/>
       <el-table-column label="操作" width="100" fixed="right">
         <template #default="scope">
-          <el-button type="success"  @click="retest(scope.row)">复拣</el-button>
+          <el-button type="success"  @click="retest(scope.row)">称重</el-button>
         </template>
       </el-table-column>
     </el-table>
+   
     
     <br>
     

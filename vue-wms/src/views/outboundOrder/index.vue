@@ -83,7 +83,7 @@ import outboundOrderWeights from './outboundOrderWeights/index.vue';
             <span>称重ᅟᅠᅟᅠ </span>
           </span>
         </template>
-        <outboundOrder_yfh/>
+        <outboundOrderWeights/>
       </el-tab-pane>
        <el-tab-pane>
         <template #label>
@@ -93,7 +93,7 @@ import outboundOrderWeights from './outboundOrderWeights/index.vue';
             <span>出库ᅟᅠᅟᅠ </span>
           </span>
         </template>
-        <outboundOrder_yfh/>
+        <outboundOrder_ck/>
       </el-tab-pane>
        <el-tab-pane>
         <template #label>
@@ -103,7 +103,7 @@ import outboundOrderWeights from './outboundOrderWeights/index.vue';
             <span>已签收ᅟᅠᅟᅠ </span>
           </span>
         </template>
-        <outboundOrderWeights/>
+        <outboundOrder_qs/>
       </el-tab-pane>
       
     </el-tabs>

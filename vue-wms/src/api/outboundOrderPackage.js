@@ -1,8 +1,8 @@
 import request from "@/utils/request"
 
 // 分页查询出库单打包记录
-export const getPageApi = (page, pageSize,  title, packageStatus) => 
-  request.get(`/outbound_order_package?page=${page}&pageSize=${pageSize}&title=${title}&packageStatus=${packageStatus}`)
+export const getPageApi = (page, pageSize,  title, packageStatus,invoiceCode,packageCode) => 
+  request.get(`/outbound_order_package?page=${page}&pageSize=${pageSize}&title=${title}&packageStatus=${packageStatus}&&invoiceCode=${invoiceCode}&packageCode=${packageCode}`)
 
 // 根据ID查询出库单打包记录
 export const getOutboundOrderPackageByIdApi = (id) => request.get(`/outbound_order_package/${id}`)

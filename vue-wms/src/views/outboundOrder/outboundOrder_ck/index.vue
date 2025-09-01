@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import ListWarehousingEntryUp from './list.vue'
+
+import listWarehouse from './list.vue'
 
 const listRef = ref()
 
@@ -14,11 +15,13 @@ const handleRefresh = () => {
 
 <template>
  <div>
-  出库
+    出库
     
+  
+
     <!-- 列表 -->
     <div class="list"> 
-      <ListWarehousingEntryUp ref="listRef" /> 
+      <listWarehouse ref="listRef" /> 
     </div>
  </div>
 </template>

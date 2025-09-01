@@ -6,10 +6,11 @@ const emit = defineEmits(['search'])
 
 // 定义搜索表单的响应式数据对象
 const searchForm = ref({
-    customerName: '',
-    invoiceCode: '',           
+           
     title: '',
-    pickStatus: ''
+    weightsStatus: ''
+    ,invoiceCode: '',
+    weightsCode: ''
 })
 
 
@@ -25,10 +26,11 @@ const handleRefreshZi = () => {
 }
 
 // 重置表单函数
-const reset = () => {
-    searchForm.value.customerName = ''      
-    searchForm.value.invoiceCode = ''      
+const reset = () => {    
+    searchForm.value.weightsStatus = ''      
     searchForm.value.title = ''
+    searchForm.value.invoiceCode = ''
+    searchForm.value.weightsCode = ''
     handleRefreshZi()
 }
 
@@ -43,15 +45,22 @@ onMounted(() => {
 <template>
   <div id="box">
     <el-form :inline="true" :model="searchForm" >
-      <el-form-item label="客户名"> 
-        <el-input v-model="searchForm.customerName" placeholder="请输入客户名子" clearable />
+      <el-form-item label="商品名称"> 
+        <el-input v-model="searchForm.title" placeholder="请输入商品名称" clearable />
       </el-form-item>
-      <el-form-item label="发货单号"> 
-        <el-input v-model="searchForm.invoiceCode" placeholder="请输入发货单号" clearable />
+      <el-form-item label="称重单单号"> 
+        <el-input v-model="searchForm.invoiceCode" placeholder="请输入称重单单号" clearable />
       </el-form-item>
-        <el-form-item label="发货单号"> 
-        <el-input v-model="searchForm.title" placeholder="请输商品名字" clearable />
+      <el-form-item label="称重单单号"> 
+        <el-input v-model="searchForm.weightsCode" placeholder="请输入称重单单号" clearable />
       </el-form-item>
+      <el-form-item label="状态" style="width: 200px;"> 
+        <el-select v-model="searchForm.weightsStatus" placeholder="请选择状态" clearable>
+          <el-option label="待称重" value="1"></el-option>
+          <el-option label="已称重" value="2"></el-option>
+        </el-select>
+      </el-form-item>
+   
       
       
       <!-- 按钮区域 -->

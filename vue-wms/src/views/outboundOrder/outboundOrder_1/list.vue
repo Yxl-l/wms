@@ -78,7 +78,7 @@ const currentOrder = ref(null);
 const statusConfig = {
   1: { text: '预发货', type: 'info' },
   2: { text: '确认发货', type: 'primary' },
-  3: { text: '拣货中', type: 'warning' },
+  3: { text: '拣货中', type: 'success' },
   4: { text: '拣货完成', type: 'success' },
   5: { text: '拣货完成待打包', type: 'warning' },
   6: { text: '待称重', type: 'primary' },

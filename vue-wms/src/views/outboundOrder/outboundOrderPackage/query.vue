@@ -9,6 +9,8 @@ const searchForm = ref({
            
     title: '',
     packageStatus: ''
+    ,invoiceCode: '',
+    packageCode: ''
 })
 
 
@@ -27,6 +29,8 @@ const handleRefreshZi = () => {
 const reset = () => {    
     searchForm.value.packageStatus = ''      
     searchForm.value.title = ''
+    searchForm.value.invoiceCode = ''
+    searchForm.value.packageCode = ''
     handleRefreshZi()
 }
 
@@ -44,7 +48,13 @@ onMounted(() => {
       <el-form-item label="商品名称"> 
         <el-input v-model="searchForm.title" placeholder="请输入商品名称" clearable />
       </el-form-item>
-      <el-form-item label="状态"> 
+      <el-form-item label="发货单单号"> 
+        <el-input v-model="searchForm.invoiceCode" placeholder="请输入发货单单号" clearable />
+      </el-form-item>
+      <el-form-item label="打包单单号"> 
+        <el-input v-model="searchForm.packageCode" placeholder="请输入打包单单号" clearable />
+      </el-form-item>
+      <el-form-item label="状态" style="width: 200px;"> 
         <el-select v-model="searchForm.packageStatus" placeholder="请选择状态" clearable>
           <el-option label="待出库" value="1"></el-option>
           <el-option label="已出库" value="2"></el-option>

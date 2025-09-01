@@ -39,9 +39,11 @@ const getPage = async () => {
     let res = await getPageApi(
       page.value,
       pageSize.value,
-      queryRef.value?.searchForm?.packageStatus || '',
-
       queryRef.value?.searchForm?.title || '',
+      queryRef.value?.searchForm?.packageStatus || '',
+      queryRef.value?.searchForm?.invoiceCode || '',
+      queryRef.value?.searchForm?.packageCode || '',
+
 
          // title参数
     );
@@ -82,6 +84,8 @@ const handleRefresh = () => {
     queryRef.value.searchForm.packageStatus = '';
  
     queryRef.value.searchForm.title = '';
+    queryRef.value.searchForm.invoiceCode = ''
+    queryRef.value.searchForm.packageCode = ''
   }
   page.value = 1;
   getPage();
@@ -204,7 +208,7 @@ onMounted(() => {
       <el-table-column prop="invoiceCode" label="发货单号" width="150"/>
       <el-table-column prop="customerName" label="客户名称" width="80"/>
       <el-table-column prop="skuId" label="商品编码" width="80"/>
-      
+       <el-table-column prop="packageCode" label="打包单单号" width="150"/>
       <el-table-column prop="title" label="商品名称" width="120"/>
       <el-table-column prop="spuId" label="规格编码" width="80"/>
       <el-table-column prop="code" label="条码" width="120"/>
